@@ -22,3 +22,6 @@ def main():
             f.write(f"{time.time()} {prompt}\n")
 
         core_instance.run_llm(prompt)  # Utilize the run_llm method of Core instance
+
+if __name__ == "__main__":
+    main()
