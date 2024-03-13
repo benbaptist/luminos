@@ -58,7 +58,7 @@ class FileIO(BaseTool):
 
     def write(self, path, content):
         """
-        openai.function: Write content to a file at the specified path. If path does not exist, it will write a new file.
+        openai.function: Write content to a file at the specified path. If path does not exist, it will write a new file. NEVER truncate for clarify; you are overriding a real file and you must output the whole file as it should be written.
 
         path,content
 

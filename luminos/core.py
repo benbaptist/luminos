@@ -1,6 +1,6 @@
 from luminos.tools import Tools
+from luminos.config import Config
 from luminos.system_prompt import SYSTEM_PROMPT
-# from luminos.config import Config
 
 import openai
 import json
@@ -11,6 +11,15 @@ class Core:
             "role": "system",
             "content": SYSTEM_PROMPT
         }]
+
+        # Load settings from YAML configuration
+        config = Config().settings
+        api_key = config.get('OPENAI_API_KEY', '')
+        
+        if api_key:
+            self.client = openai.OpenAI(api_key=api_key)
+        else:
+            self.client = openai.OpenAI()
         
         self.client = openai.OpenAI()
         self.tools = Tools()

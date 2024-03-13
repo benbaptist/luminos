@@ -11,7 +11,7 @@ class Config:
             os.makedirs(os.path.dirname(self.config_path), exist_ok=True)
             with open(self.config_path, 'w') as config_file:
                 default_config = {
-                    'OPENAI_API_KEY': 'your-api-key-here',
+                    'OPENAI_API_KEY': None,
                     'PERSIST_CONVO': True
                 }
                 yaml.dump(default_config, config_file)
