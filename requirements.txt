@@ -1,2 +1,3 @@
 requests
 docstring_parser
+yaml
