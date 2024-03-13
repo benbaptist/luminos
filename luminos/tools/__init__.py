@@ -1,9 +1,10 @@
 from tools.fileio import FileIO
 from tools.http import HTTP
+from tools.shell import Shell
 
 class Tools:
     def __init__(self):
-        self.tools = [FileIO, HTTP]
+        self.tools = [FileIO, HTTP, Shell]
 
     def call(self, name, kwargs):
         tool_name, function_name = name.split("_")
@@ -29,6 +30,8 @@ class Tools:
         for tool in self.tools:
             tool = tool()
             l += tool.__func__
+
+        print(l)
         return l
 
     @property

@@ -4,7 +4,7 @@ Luminos is a powerful Command-Line Interface (CLI) utility designed to effective
 
 ## Features
 
-- **Direct LLM Access:** Luminos grants LLMs direct access to the filesystem, enabling them to perform file manipulations, data processing, and more.
+- **Direct Filesystem Access:** Luminos grants LLMs direct access to the filesystem, enabling them to perform file manipulations, data processing, and more.
 - **Interactive Shell Integration:** Seamlessly integrate LLM capabilities into your command-line experience, allowing for interactive, conversational utility.
 - **Versatile Task Handling:** From renaming files based on their size to making HTTP requests or filtering through data, Luminos empowers users to perform a wide range of tasks efficiently.
 
