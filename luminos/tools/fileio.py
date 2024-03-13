@@ -105,7 +105,7 @@ class FileIO(BaseTool):
 
         return f"Successfully deleted {path}"
 
-    def make_dir(self, path):
+    def mkdir(self, path):
         """
         openai.function: Create a new directory at the specified path.
 
@@ -120,7 +120,7 @@ class FileIO(BaseTool):
 
         return f"Successfully created directory {path}"
 
-    def delete_dir(self, path):
+    def rmdir(self, path):
         """
         openai.function: Delete a directory at the specified path.
 
