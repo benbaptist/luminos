@@ -1,10 +1,9 @@
-from core import run_llm
+from core import Core
 
 import time
 
-messages = []  # Initialize a global messages list
-
 if __name__ == "__main__":
+    core_instance = Core()  # Initialize an instance of the Core class
     while True:
         try:
             prompt = input("<user> ")
@@ -17,4 +16,4 @@ if __name__ == "__main__":
         with open(".luminos_history", "a") as f:
             f.write(f"{time.time()} {prompt}\n")
 
-        run_llm(prompt, messages)  # Pass the messages list to run_llm
+        core_instance.run_llm(prompt)  # Utilize the run_llm method of Core instance

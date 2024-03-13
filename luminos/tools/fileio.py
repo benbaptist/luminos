@@ -91,3 +91,64 @@ class FileIO(BaseTool):
             f.write(content)
 
         return "Successfully appended to {path}"
+
+    def delete(self, path):
+        """
+        openai.function: Delete a file at the specified path.
+
+        path
+
+        :param str path: The path of the file to delete.
+        """
+
+        self.safe(f"Delete file {path}")
+
+        os.remove(path)
+
+        return f"Successfully deleted {path}"
+
+    def make_dir(self, path):
+        """
+        openai.function: Create a new directory at the specified path.
+
+        path
+
+        :param str path: The path of the directory to create.
+        """
+
+        self.safe(f"Create directory {path}")
+
+        os.makedirs(path, exist_ok=True)
+
+        return f"Successfully created directory {path}"
+
+    def delete_dir(self, path):
+        """
+        openai.function: Delete a directory at the specified path.
+
+        path
+
+        :param str path: The path of the directory to delete.
+        """
+
+        self.safe(f"Delete directory {path}")
+
+        os.rmdir(path)
+
+        return f"Successfully deleted directory {path}"
+
+    def move(self, source, destination):
+        """
+        openai.function: Move or rename a file/directory from the source path to the destination path.
+
+        source,destination
+
+        :param str source: The source path of the file/directory to move.
+        :param str destination: The destination path where the file/directory will be moved to.
+        """
+
+        self.safe(f"Move {source} to {destination}")
+
+        os.rename(source, destination)
+
+        return f"Successfully moved {source} to {destination}"
