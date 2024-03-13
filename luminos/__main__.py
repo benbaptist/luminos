@@ -6,11 +6,9 @@ import time
 
 def main():
     core_instance = Core()  # Initialize an instance of the Core class
-
     if len(sys.argv) > 1:
         target_dir = sys.argv[1]
         os.chdir(target_dir)
-        
     while True:
         try:
             prompt = input("<user> ")

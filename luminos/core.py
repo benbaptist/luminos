@@ -2,8 +2,7 @@ from luminos.tools import Tools
 from luminos.config import Config
 from luminos.system_prompt import SYSTEM_PROMPT
 
-from openai import OpenAI
-
+import openai
 import json
 
 class Core:
@@ -18,10 +17,11 @@ class Core:
         api_key = config.get('OPENAI_API_KEY', '')
         
         if api_key:
-            self.client = OpenAI(api_key=api_key)
+            self.client = openai.OpenAI(api_key=api_key)
         else:
-            self.client = OpenAI()
+            self.client = openai.OpenAI()
         
+        self.client = openai.OpenAI()
         self.tools = Tools()
 
     def run_llm(self, txt):
