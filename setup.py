@@ -2,18 +2,18 @@ from setuptools import setup, find_packages
 
 setup(
     name='luminos',
-    version='1.0.0',
+    version='0.0.1',
     packages=find_packages(),
     install_requires=[
         'requests',
+        'docstring_parser'
     ],
     python_requires='>=3.6',
-    author='Luminos Team',
-    author_email='info@luminos.example.com',
-    description='Luminos: A Python framework designed for extending the capabilities of language models (LMs) within a Linux shell environment.',
+    author='Ben Baptist',
+    description='Luminos: CLI Utility for Integrating LLMs into the Shell',
     license='MIT',
     keywords='languagemodel tools shell',
-    url='https://github.com/luminos',
+    url='https://github.com/benbaptist/luminos',
     entry_points={
         'console_scripts': [
             'luminos = luminos.__main__:main',
