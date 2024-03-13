@@ -1,8 +1,9 @@
 from tools.fileio import FileIO
+from tools.http import HTTP
 
 class Tools:
     def __init__(self):
-        self.tools = [FileIO]
+        self.tools = [FileIO, HTTP]
 
     def call(self, name, kwargs):
         tool_name, function_name = name.split("_")

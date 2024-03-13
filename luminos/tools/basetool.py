@@ -67,7 +67,7 @@ class BaseTool:
         return func
 
     def safe(self, reason):
-        if input(f"Permission to `{reason}` requested. Grant permission? [Y/n]: ") == "Y":
+        if input(f"Permission to `{reason}` requested. Grant permission? [Y/n]: ").upper() == "Y":
             return 
         else:
             raise PermissionError("The user did not grant you permission to this action. Sorry!")

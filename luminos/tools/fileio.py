@@ -42,7 +42,7 @@ class FileIO(BaseTool):
         
     def create(self, path):
         """
-        openai.function: Create a new file at the specified path.
+        openai.function: Create a new file at the specified path. If you are wanting to write data to the file, you do not need to do this first. You can just use fileio_write directly.
 
         path
 
@@ -58,10 +58,9 @@ class FileIO(BaseTool):
 
     def write(self, path, content):
         """
-        openai.function: Write content to a file at the specified path.
+        openai.function: Write content to a file at the specified path. If path does not exist, it will write a new file.
 
-        path
-        content
+        path,content
 
         :param str path: The path of the file to write to.
         :param str content: The content to write to the file.
@@ -78,8 +77,7 @@ class FileIO(BaseTool):
         """
         openai.function: Append content to a file at the specified path.
 
-        path
-        content
+        path,content
 
         :param str path: The path of the file to append to.
         :param str content: The content to append to the file.
