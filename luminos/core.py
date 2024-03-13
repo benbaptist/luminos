@@ -7,9 +7,9 @@ class Core:
 
     def __init__(self):
         self.messages = [{
-                    "role": "system",
-                    "content": self.SYSTEM_PROMPT
-                }]
+                "role": "system",
+                "content": self.SYSTEM_PROMPT
+            }]
         self.client = openai.OpenAI()
         self.tools = Tools()
 
@@ -66,8 +66,6 @@ class Core:
                     else:
                         raise Exception(f"Invalid tool_type {tool_type}")
             else:
-                # Messages append removed to avoid duplication
-
                 print(f"<gpt> {message}")
 
             # Check if the finish code has been set
