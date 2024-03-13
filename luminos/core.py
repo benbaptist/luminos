@@ -9,23 +9,26 @@ SYSTEM_PROMPT = """As an LLM operating within a Linux shell, your task is to exe
 client = openai.OpenAI()
 tools = Tools()
 
-# Define a function to iteratively run the LLM
-def run_llm(txt):
-    messages = [
-        {
-            "role": "system", 
-            "content": SYSTEM_PROMPT
-        },
-        {
-            "role": "user", 
-            "content": txt
-        }
-    ]
+# Modify the function to accept messages list as an argument and remove initial messages definition
+def run_llm(txt, messages):
+    if not messages:  # Initialize messages list with system and user message if it's empty
+        messages.append(
+            {
+                "role": "system", 
+                "content": SYSTEM_PROMPT
+            }
+        )
+        messages.append(
+            {
+                "role": "user", 
+                "content": txt
+            }
+        )
 
     while True:
         # Run the LLM
         response = client.chat.completions.create(
-            model="gpt-3.5-turbo-0125",
+            model="gpt-4-0125-preview",
             messages=messages,
             tools=tools.__obj__,
             tool_choice="auto",
@@ -67,12 +70,7 @@ def run_llm(txt):
                 else:
                     raise Exception(f"Invalid tool_type {tool_type}")
         else:
-            # messages.append(
-            #     {
-            #         "role": "assistant", 
-            #         "content": message
-            #     }
-            # )
+            # Messages append removed to avoid duplication
 
             print(f"<gpt> {message}")
 
