@@ -1,6 +1,6 @@
-from tools.fileio import FileIO
-from tools.http import HTTP
-from tools.shell import Shell
+from luminos.tools.fileio import FileIO
+from luminos.tools.http import HTTP
+from luminos.tools.shell import Shell
 
 class Tools:
     def __init__(self):

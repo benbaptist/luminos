@@ -1,9 +1,10 @@
-from core import Core
+from luminos.core import Core
+
 import os
 import sys
 import time
 
-if __name__ == "__main__":
+def main():
     core_instance = Core()  # Initialize an instance of the Core class
     if len(sys.argv) > 1:
         target_dir = sys.argv[1]
