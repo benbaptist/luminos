@@ -7,7 +7,7 @@ class Shell(BaseTool):
     name = "shell"
 
     def run(self, command, timeout=60):
-        """Executes a command in the shell.
+        """openai.function: Executes a command in the shell.
 
         command,timeout
 

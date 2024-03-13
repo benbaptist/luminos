@@ -31,7 +31,6 @@ class Tools:
             tool = tool()
             l += tool.__func__
 
-        print(l)
         return l
 
     @property
