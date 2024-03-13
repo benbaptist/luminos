@@ -4,7 +4,7 @@ from luminos.tools.shell import Shell
 
 class Tools:
     def __init__(self):
-        self.tools = [FileIO, HTTP, Shell]
+        self.tools = [Shell, FileIO, HTTP]
 
     def call(self, name, kwargs):
         tool_name, function_name = name.split("_")
