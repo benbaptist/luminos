@@ -150,3 +150,13 @@ class FileIO(BaseTool):
         os.rename(source, destination)
 
         return f"Successfully moved {source} to {destination}"
+
+    def cd(self, path):
+        """openai.function: Change the current working directory of the program.
+
+        path
+
+        :param str path: The path to change the working directory to.
+        """
+        os.chdir(path)
+        return f"Changed working directory to {path}"

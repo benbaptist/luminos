@@ -6,4 +6,3 @@
 - [ ] Better permission prompt
 - [ ] Up/down arrows dshould give you prompt history
 - [ ] Spinning animation while LLM is generating
-- [X] Implement a prettier input prompt for both <user> and <gpt>, incorporating current path and color for a shell-like feel but indicating it's a chat interface.
