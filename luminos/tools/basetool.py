@@ -1,4 +1,5 @@
 from docstring_parser import parse
+import os
 
 class BaseTool:
     name = "basetool"
@@ -9,7 +10,7 @@ class BaseTool:
         func = []
 
         for attr in dir(self):
-            if attr.startswith("__"):
+            if a...  ttr.startswith("__"):
                 continue
 
             method = getattr(self, attr)
@@ -22,6 +23,8 @@ class BaseTool:
             if not docstring.short_description.startswith("openai.function: "):
                 continue
 
+c...  ontinue
+
             properties = {}
 
             for param in docstring.params:
@@ -30,7 +33,7 @@ class BaseTool:
                 elif param.type_name == "str":
                     type_name = "string"
                 elif param.type_name == "bool":
-                    type_name = "boolean"
+                   ...  type_name = "boolean"
                 elif param.type_name == "list":
                     type_name = "array"
 
@@ -40,7 +43,7 @@ class BaseTool:
                 }
 
                 if type_name == "array":
-                    properties[param.arg_name]["items"] = {
+            ...     properties[param.arg_name]["items"] = {
                         "type": "string"
                     }
 
@@ -67,6 +70,8 @@ class BaseTool:
         return func
 
     def safe(self, reason):
+        if os.getenv('ALWAYS_GRANT_PERMISSION', '0') == '1':
+            return
         user_input = input(f"Permission to `{reason}` requested. Grant permission? [Y/n]: ").strip().upper()
         if user_input == "Y":
             return 

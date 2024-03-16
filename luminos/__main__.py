@@ -1,34 +1,32 @@
+import click
 from luminos.core import Core
 import os
-import sys
 import time
 
-class Main:
-    def __init__(self):
-        self.core = Core()
+@click.command()
+@click.option('--always-grant-permission', is_flag=True, help='Automatically grant permission for all safe operations.')
+@click.argument('directory', required=False, default='.')
+def main(always_grant_permiss... ioni, directory):
+    if always_grant_permission:
+        os.environ['ALWAYS_GRANT_PERMISSION'] = '1'
+    else:
+        os.environ['ALWAYS_GRANT_PERMISSION'] = '0'
 
-    def start(self):
-        if len(sys.argv) > 1:
-            target_dir = sys.argv[1]
-            os.chdir(target_dir)
+    if directory:
+        os.chdir(directory)
 
-        while True:
-            try:
-                prompt = input("<user> ")
-            except EOFError:
-                print("")
-                continue
-            except KeyboardInterrupt:
-                break
+    core = Core()
 
-            with open(".luminos_history", "a") as f:
-                f.write(f"{time.time()} {prompt}\n")
+    while True:
+        try:
+            prompt = input("<user> ")
+        except (EOFError, Ke...  ypboardInterrupt):
+            break
 
-            self.core.run_llm(prompt)  # Utilize the run_llm method of core instance
+        with open(".luminos_history", "a") as f:
+            f.write(f"{time.time()} {prompt}\n")
 
-def main():
-    app = Main()
-    app.start()
+        core.run_llm(prompt)
 
 if __name__ == "__main__":
     main()
