@@ -1,0 +1,7 @@
+- [ ] Make prompt show current dir, like a shell
+- [ ] Color formatting
+- [ ] Better formatting of permission requests, etc.
+- [ ] More granular permission control
+- [ ] Detailed preview of permission request if specified, use nano/vi to showcase it. 
+- [ ] Better permission prompt
+- [ ] Up/down arrows dshould give you prompt history

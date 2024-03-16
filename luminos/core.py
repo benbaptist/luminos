@@ -5,13 +5,12 @@ from luminos.system_prompt import SYSTEM_PROMPT
 from openai import OpenAI
 
 import json
+import os
+import time
 
 class Core:
     def __init__(self):
-        self.messages = [{
-            "role": "system",
-            "content": SYSTEM_PROMPT
-        }]
+        self.messages = []
 
         # Load settings from YAML configuration
         config = Config().settings
@@ -34,9 +33,22 @@ class Core:
 
         while True:
             # Run the LLM
+            prompt = SYSTEM_PROMPT.format(
+                time=time.strftime("%Y-%m-%d %H:%M:%S"),
+                current_directory=os.getcwd(),
+                listing=str(os.listdir("."))
+            )
+
+            _messages = [
+                {
+                    "role": "system",
+                    "content": prompt
+                }
+            ] + self.messages
+
             response = self.client.chat.completions.create(
                 model="gpt-4-0125-preview",
-                messages=self.messages,
+                messages=_messages,
                 tools=self.tools.__obj__,
                 tool_choice="auto",
             )
