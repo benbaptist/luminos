@@ -51,7 +51,9 @@ class Main:
                     display_cwd = '...' + cwd[-17:]
                 else:
                     display_cwd = cwd
-                user_input = prompt(f"[user@luminos {display_cwd}]$ ", style=current_style, key_bindings=bindings)
+                user_input = ''
+                while not user_input.strip():
+                    user_input = prompt(f"[user@luminos {display_cwd}]$ ", style=current_style, key_bindings=bindings)
                 
                 self.core.run_llm(user_input)
             except EOFError:
