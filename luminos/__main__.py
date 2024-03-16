@@ -6,7 +6,6 @@ from prompt_toolkit.key_binding import KeyBindings
 
 bindings = KeyBindings()
 
-
 class Main:
     def __init__(self):
         self.core = Core()
@@ -25,8 +24,8 @@ class Main:
         while True:
             try:
                 user_input = prompt("<user> ", key_bindings=bindings)
-                # Process user_input here
-                print(f"You entered: {user_input}")  # Placeholder for actual processing logic
+                
+                self.core.run_llm(user_input)
             except EOFError:
                 print("Exiting...")
                 break
