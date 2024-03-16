@@ -1,15 +1,30 @@
 from docstring_parser import parse
 import os
-from prompt_toolkit import print_formatted_text
+from prompt_toolkit import print_formatted_text, prompt
 from prompt_toolkit.formatted_text import FormattedText
 from prompt_toolkit.styles import Style
+from prompt_toolkit.key_binding import KeyBindings
 
-# Define custom styles for the permission request
+# Define custom styles for the permission request and key bindings
 style = Style.from_dict({
     'permission': 'bg:ansiyellow ansiwhite bold',
     'action': 'bg:ansiblue ansiwhite bold',
     'normal': '' # Default text style
 })
+
+bindings = KeyBindings()
+
+@bindings.add('y')
+def accept(event):
+    event.app.exit('Y')
+
+@bindings.add('n')
+def decline(event):
+    event.app.exit('N')
+
+@bindings.add('c-q')
+def exit_app(event):
+    event.app.exit()
 
 class BaseTool:
     name = "basetool"
@@ -83,11 +98,14 @@ class BaseTool:
         permission_request = FormattedText([
             ('class:permission', '\n[Permission Request] Permission to perform the following action is requested:\n'),
             ('class:action', f'Action: {reason}\n'),
-            ('class:normal', 'Grant permission? [Y/n]: ')
+            ('class:normal', 'Grant permission? (Y/N, Ctrl+Q to quit): ')
         ])
         print_formatted_text(permission_request, style=style)
-        user_input = input().strip().upper()
-        if user_input == "Y":
-            return 
-        else:
+
+        user_input = prompt('', key_bindings=bindings).strip().upper()
+        if user_input == 'Y':
+            return
+        elif user_input == 'N':
             raise PermissionError("Permission denied by the user.")
+        else:
+            self.safe(reason) # Recursive call if any other key is pressed
