@@ -1,5 +1,7 @@
 from docstring_parser import parse
 import os
+from prompt_toolkit import print_formatted_text
+from prompt_toolkit.formatted_text import FormattedText
 
 class BaseTool:
     name = "basetool"
@@ -70,11 +72,14 @@ class BaseTool:
     def safe(self, reason):
         if os.getenv('ALWAYS_GRANT_PERMISSION', '0') == '1':
             return
-        print("\n[Permission Request] Permission to perform the following action is requested:")
-        print(f"Action: {reason}")
-        print("Grant permission? [Y/n]:", end=' ')
+        permission_request = FormattedText([
+            ('class:permission', '\n[Permission Request] Permission to perform the following action is requested:\n'),
+            ('class:action', f'Action: {reason}\n'),
+            ('class:normal', 'Grant permission? [Y/n]: ')
+        ])
+        print_formatted_text(permission_request)
         user_input = input().strip().upper()
         if user_input == "Y":
-            return 
+            return
         else:
             raise PermissionError("Permission denied by the user.")
