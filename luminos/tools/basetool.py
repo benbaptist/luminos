@@ -10,7 +10,7 @@ class BaseTool:
         func = []
 
         for attr in dir(self):
-            if a...  ttr.startswith("__"):
+            if attr.startswith("__"):
                 continue
 
             method = getattr(self, attr)
@@ -23,8 +23,6 @@ class BaseTool:
             if not docstring.short_description.startswith("openai.function: "):
                 continue
 
-c...  ontinue
-
             properties = {}
 
             for param in docstring.params:
@@ -33,7 +31,7 @@ c...  ontinue
                 elif param.type_name == "str":
                     type_name = "string"
                 elif param.type_name == "bool":
-                   ...  type_name = "boolean"
+                    type_name = "boolean"
                 elif param.type_name == "list":
                     type_name = "array"
 
@@ -43,7 +41,7 @@ c...  ontinue
                 }
 
                 if type_name == "array":
-            ...     properties[param.arg_name]["items"] = {
+                    properties[param.arg_name]["items"] = {
                         "type": "string"
                     }
 
