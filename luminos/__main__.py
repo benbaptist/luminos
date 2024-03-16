@@ -1,18 +1,13 @@
 import click
 from luminos.core import Core
 import os
-import sys
-import time
 from prompt_toolkit import prompt
 from prompt_toolkit.key_binding import KeyBindings
+from prompt_toolkit.filters import Condition
 
-# Configure key bindings for advanced input handling
+# Initialize key bindings
 bindings = KeyBindings()
-
-# Bind Shift+Enter to insert a newline instead of submitting
-@bindings.add('enter', shift=True)
-def _(event):
-    event.current_buffer.insert_text('\n')
+is_multiline = Condition(lambda: True)  # Always true condition for multiline
 
 class Main:
     def __init__(self):
@@ -31,17 +26,15 @@ class Main:
 
         while True:
             try:
-                user_input = prompt("<user> ", multiline=True, key_bindings=bindings)
+                user_input = prompt("<user> ", multiline=is_multiline, key_bindings=bindings)
+                # Process user_input here
+                print(f"You entered: {user_input}")  # Placeholder for actual processing logic
             except EOFError:
-                print("")
-                continue
-            except KeyboardInterrupt:
+                print("Exiting...")
                 break
-
-            with open(".luminos_history", "a") as f:
-                f.write(f"{time.time()} {user_input}\n")
-
-            self.core.run_llm(user_input)
+            except KeyboardInterrupt:
+                print("Exiting...")
+                break
 
 def main():
     @click.command()
