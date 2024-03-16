@@ -1,6 +1,7 @@
 import click
 from luminos.core import Core
 import os
+import signal
 from prompt_toolkit import prompt, print_formatted_text
 from prompt_toolkit.key_binding import KeyBindings
 from prompt_toolkit.styles import Style
@@ -20,12 +21,22 @@ style_warning = Style.from_dict({
 class Main:
     def __init__(self):
         self.core = Core()
+        self.exit_signal_count = 0
+        signal.signal(signal.SIGINT, self.handle_sigint)
+
+    def handle_sigint(self, signum, frame):
+        if self.exit_signal_count == 0:
+            self.exit_signal_count += 1
+            print('\nPress Ctrl+C again to exit...')
+        else:
+            print('\nExiting...')
+            exit()
 
     def start(self, permissive, directory):
         # Apply the permissive setup
         if permissive:
             warning_message = FormattedText([
-                ('class:warning', 'WARNING: You have enabled "permissive" mode. This provides the LLM with unprompted privileged access, which can pose potential security risks. To proceed, type "YES": '),
+                ('class:warning', 'WARNING: You have enabled \"permissive\" mode. This provides the LLM with unprompted privileged access, which can pose potential security risks. To proceed, type \"YES\": '),
             ])
             print_formatted_text(warning_message, style=style_warning)
             user_response = prompt('>', style=style_warning)
@@ -57,11 +68,11 @@ class Main:
                 
                 self.core.run_llm(user_input)
             except EOFError:
-                print("Exiting...")
+                print("\nExiting...")
                 break
             except KeyboardInterrupt:
-                print("Exiting...")
-                break
+                continue
+
 
 def main():
     @click.command()

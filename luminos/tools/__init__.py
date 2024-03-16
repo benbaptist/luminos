@@ -16,6 +16,11 @@ class Tools:
 
                 # Call the function and return the result
                 try:
+                    kwargs_f = ("%s=%r" % (k, v) for k, v in kwargs.items())
+                    kwargs_f = ", ".join(kwargs_f)
+
+                    print(f"\033[92m* {name}({kwargs_f})\033[0m")
+                    
                     return getattr(tool_cxt, function_name)(**kwargs)
                 except Exception as e:
                     print(f"func returned error: {e}")
