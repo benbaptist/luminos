@@ -70,8 +70,11 @@ class BaseTool:
     def safe(self, reason):
         if os.getenv('ALWAYS_GRANT_PERMISSION', '0') == '1':
             return
-        user_input = input(f"Permission to `{reason}` requested. Grant permission? [Y/n]: ").strip().upper()
+        print("\n[Permission Request] Permission to perform the following action is requested:")
+        print(f"Action: {reason}")
+        print("Grant permission? [Y/n]:", end=' ')
+        user_input = input().strip().upper()
         if user_input == "Y":
             return 
         else:
-            raise PermissionError("The user did not grant you permission to this action. Sorry!")
+            raise PermissionError("Permission denied by the user.")
