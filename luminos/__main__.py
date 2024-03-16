@@ -2,21 +2,19 @@ import click
 from luminos.core import Core
 import os
 from prompt_toolkit import prompt
+from prompt_toolkit.keys import Keys
 from prompt_toolkit.key_binding import KeyBindings
 from prompt_toolkit.key_binding.bindings.named_commands import accept_line
-from prompt_toolkit.filters import Condition
 
-# Initialize key bindings
 bindings = KeyBindings()
 
-# Bind Shift+Enter to insert a newline instead of submitting (already default behavior in multiline)
-
-# Add Ctrl+Enter to submit the input
-@bindings.add('enter', 'ctrl')
-def _(event):
+# Correct Ctrl+Enter binding to submit the input
+@bindings.add(Keys.ControlJ)  # ControlJ represents Ctrl+Enter in prompt_toolkit
+def submit_input(event):
     accept_line(event)
 
-is_multiline = Condition(lambda: True)  # Always true condition for multiline
+
+is_multiline = True  # Enabling multiline input
 
 class Main:
     def __init__(self):
@@ -37,7 +35,7 @@ class Main:
             try:
                 user_input = prompt("<user> ", multiline=is_multiline, key_bindings=bindings)
                 # Process user_input here
-                print(f"You entered: {user_input}")  # Placeholder for actual processing logic
+                print(f"You entered: {user_input}")
             except EOFError:
                 print("Exiting...")
                 break
