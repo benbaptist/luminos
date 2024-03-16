@@ -1,8 +1,8 @@
-- [ ] Make prompt show current dir, like a shell
-- [ ] Color formatting
-- [ ] Better formatting of permission requests, etc.
+- [X] Make prompt show current dir, like a shell
+- [X] Color formatting
+- [X] Better formatting of permission requests, etc.
 - [ ] More granular permission control
 - [ ] Detailed preview of permission request if specified, use nano/vi to showcase it. 
 - [ ] Better permission prompt
 - [ ] Up/down arrows dshould give you prompt history
-- [ ] Implement a prettier input prompt for both <user> and <gpt>, incorporating current path and color for a shell-like feel but indicating it's a chat interface.
+- [X] Implement a prettier input prompt for both <user> and <gpt>, incorporating current path and color for a shell-like feel but indicating it's a chat interface.

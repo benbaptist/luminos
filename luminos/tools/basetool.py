@@ -2,6 +2,14 @@ from docstring_parser import parse
 import os
 from prompt_toolkit import print_formatted_text
 from prompt_toolkit.formatted_text import FormattedText
+from prompt_toolkit.styles import Style
+
+# Define custom styles for the permission request
+style = Style.from_dict({
+    'permission': 'bg:ansiyellow ansiwhite bold',
+    'action': 'bg:ansiblue ansiwhite bold',
+    'normal': '' # Default text style
+})
 
 class BaseTool:
     name = "basetool"
@@ -77,9 +85,9 @@ class BaseTool:
             ('class:action', f'Action: {reason}\n'),
             ('class:normal', 'Grant permission? [Y/n]: ')
         ])
-        print_formatted_text(permission_request)
+        print_formatted_text(permission_request, style=style)
         user_input = input().strip().upper()
         if user_input == "Y":
-            return
+            return 
         else:
             raise PermissionError("Permission denied by the user.")
