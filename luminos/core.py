@@ -7,7 +7,13 @@ from openai import OpenAI
 import json
 import os
 import time
+from prompt_toolkit import print_formatted_text
+from prompt_toolkit.formatted_text import FormattedText
+from prompt_toolkit.styles import Style
 
+style = Style.from_dict({
+    'gpt': 'ansiwhite bg:ansiblack', # Grey text for GPT prompt
+})
 
 class Core:
     def __init__(self):
@@ -77,8 +83,6 @@ class Core:
 
                         func_response = self.tools.call(func_name, func_kwargs)
 
-                        print(f"{func_name}({func_kwargs}) executed successfully.")
-                        
                         self.messages.append(
                             {
                                 "tool_call_id": call_id,
@@ -95,7 +99,10 @@ class Core:
                     display_cwd = '...' + cwd[-17:]
                 else:
                     display_cwd = cwd
-                print(f"[gpt@luminos {display_cwd}]# {message}")
+                formatted_message = FormattedText([
+                    ('class:gpt', f"[gpt@luminos {display_cwd}]# {message}")
+                ])
+                print_formatted_text(formatted_message, style=style)
 
             # Check if the finish code has been set
             if finish_reason == "stop":
