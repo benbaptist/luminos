@@ -9,8 +9,6 @@ class FileIO(BaseTool):
         """openai.function: List the contents of a directory
 
         path
-
-        :param str path: The path to list.
         """
         dir = []
 
@@ -33,8 +31,6 @@ class FileIO(BaseTool):
         """openai.function: Read the contents of a file. If you are unsure of what names exist, use fileio_list.
 
         path
-
-        :param str path: The path of the file to read.
         """
         
         with open(path, "r") as f:
@@ -45,8 +41,6 @@ class FileIO(BaseTool):
         openai.function: Create a new file at the specified path. If you are wanting to write data to the file, you do not need to do this first. You can just use fileio_write directly.
 
         path
-
-        :param str path: The path of the file to create.
         """
 
         self.safe(f"Create blank file {path}")
@@ -58,12 +52,9 @@ class FileIO(BaseTool):
 
     def write(self, path, content):
         """
-        openai.function: Write content to a file at the specified path. If path does not exist, it will write a new file. NEVER truncate for clarify; you are overriding a real file and you must output the whole file as it should be written.
+        openai.function: Write content to a file at the specified path. IMPORTANT: You must output the whole file as it should be written, without truncating it.
 
         path,content
-
-        :param str path: The path of the file to write to.
-        :param str content: The content to write to the file.
         """
 
         self.safe(f"Write {len(content)} bytes to file {path}")
@@ -78,9 +69,6 @@ class FileIO(BaseTool):
         openai.function: Append content to a file at the specified path.
 
         path,content
-
-        :param str path: The path of the file to append to.
-        :param str content: The content to append to the file.
         """
 
         self.safe(f"Append {len(content)} bytes to file {path}")
@@ -95,8 +83,6 @@ class FileIO(BaseTool):
         openai.function: Delete a file at the specified path.
 
         path
-
-        :param str path: The path of the file to delete.
         """
 
         self.safe(f"Delete file {path}")
@@ -110,8 +96,6 @@ class FileIO(BaseTool):
         openai.function: Create a new directory at the specified path.
 
         path
-
-        :param str path: The path of the directory to create.
         """
 
         self.safe(f"Create directory {path}")
@@ -125,8 +109,6 @@ class FileIO(BaseTool):
         openai.function: Delete a directory at the specified path.
 
         path
-
-        :param str path: The path of the directory to delete.
         """
 
         self.safe(f"Delete directory {path}")
@@ -140,9 +122,6 @@ class FileIO(BaseTool):
         openai.function: Move or rename a file/directory from the source path to the destination path.
 
         source,destination
-
-        :param str source: The source path of the file/directory to move.
-        :param str destination: The destination path where the file/directory will be moved to.
         """
 
         self.safe(f"Move {source} to {destination}")
