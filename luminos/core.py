@@ -8,6 +8,7 @@ import json
 import os
 import time
 
+
 class Core:
     def __init__(self):
         self.messages = []
@@ -76,7 +77,7 @@ class Core:
 
                         func_response = self.tools.call(func_name, func_kwargs)
 
-                        print(f"{func_name}({func_kwargs})")
+                        print(f"{func_name}({func_kwargs}) executed successfully.")
                         
                         self.messages.append(
                             {
@@ -89,7 +90,12 @@ class Core:
                     else:
                         raise Exception(f"Invalid tool_type {tool_type}")
             else:
-                print(f"<gpt> {message}")
+                cwd = os.getcwd()
+                if len(cwd) > 20:
+                    display_cwd = '...' + cwd[-17:]
+                else:
+                    display_cwd = cwd
+                print(f"[gpt@luminos {display_cwd}]# {message}")
 
             # Check if the finish code has been set
             if finish_reason == "stop":

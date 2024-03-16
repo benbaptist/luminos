@@ -5,3 +5,4 @@
 - [ ] Detailed preview of permission request if specified, use nano/vi to showcase it. 
 - [ ] Better permission prompt
 - [ ] Up/down arrows dshould give you prompt history
+- [ ] Implement a prettier input prompt for both <user> and <gpt>, incorporating current path and color for a shell-like feel but indicating it's a chat interface.

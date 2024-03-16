@@ -3,8 +3,13 @@ from luminos.core import Core
 import os
 from prompt_toolkit import prompt
 from prompt_toolkit.key_binding import KeyBindings
+from prompt_toolkit.styles import Style
 
 bindings = KeyBindings()
+
+style = Style.from_dict({
+    'prompt': 'ansicyan bold',
+})
 
 class Main:
     def __init__(self):
@@ -23,7 +28,12 @@ class Main:
 
         while True:
             try:
-                user_input = prompt("<user> ", key_bindings=bindings)
+                cwd = os.getcwd()
+                if len(cwd) > 20:
+                    display_cwd = '...' + cwd[-17:]
+                else:
+                    display_cwd = cwd
+                user_input = prompt(f"[user@luminos {display_cwd}]$ ", style=style, key_bindings=bindings)
                 
                 self.core.run_llm(user_input)
             except EOFError:
