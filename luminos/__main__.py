@@ -3,6 +3,16 @@ from luminos.core import Core
 import os
 import sys
 import time
+from prompt_toolkit import prompt
+from prompt_toolkit.key_binding import KeyBindings
+
+# Configure key bindings for advanced input handling
+bindings = KeyBindings()
+
+# Bind Shift+Enter to insert a newline instead of submitting
+@bindings.add('enter', shift=True)
+def _(event):
+    event.current_buffer.insert_text('\n')
 
 class Main:
     def __init__(self):
@@ -21,7 +31,7 @@ class Main:
 
         while True:
             try:
-                prompt = input("<user> ")
+                user_input = prompt("<user> ", multiline=True, key_bindings=bindings)
             except EOFError:
                 print("")
                 continue
@@ -29,9 +39,9 @@ class Main:
                 break
 
             with open(".luminos_history", "a") as f:
-                f.write(f"{time.time()} {prompt}\n")
+                f.write(f"{time.time()} {user_input}\n")
 
-            self.core.run_llm(prompt)
+            self.core.run_llm(user_input)
 
 def main():
     @click.command()

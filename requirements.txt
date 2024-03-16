@@ -1,3 +1,4 @@
 requests
 docstring_parser
 yaml
+prompt_toolkit
