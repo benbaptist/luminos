@@ -7,3 +7,4 @@
 - [ ] Up/down arrows dshould give you prompt history
 - [ ] Spinning animation while LLM is generating
 - [ ] Save sessions to ~/.config/luminos/sessions, remember them by directory, and prompt on launch if you want to load an existing session or start a new one
+- [ ] Better code structure, more organized
