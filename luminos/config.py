@@ -12,7 +12,8 @@ class Config:
             with open(self.config_path, 'w') as config_file:
                 default_config = {
                     'OPENAI_API_KEY': None,
-                    'PERSIST_CONVO': True
+                    'PERSIST_CONVO': True,
+                    'LLM_MODEL': 'gpt-4-0125-preview' # Default LLM Model
                 }
                 yaml.dump(default_config, config_file)
             print('Default config generated at:', self.config_path)

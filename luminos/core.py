@@ -21,10 +21,11 @@ class Core:
 
         # Load settings from YAML configuration
         config = Config().settings
-        api_key = config.get('OPENAI_API_KEY', '')
+        self.api_key = config.get('OPENAI_API_KEY', '')
+        self.llm_model = config.get('LLM_MODEL', 'gpt-4-0125-preview') # Fetch the LLM model from configuration and store in instance variable
         
-        if api_key:
-            self.client = OpenAI(api_key=api_key)
+        if self.api_key:
+            self.client = OpenAI(api_key=self.api_key)
         else:
             self.client = OpenAI()
         
@@ -54,7 +55,7 @@ class Core:
             ] + self.messages
 
             response = self.client.chat.completions.create(
-                model="gpt-4-0125-preview",
+                model=self.llm_model, # Use the LLM model from instance variable
                 messages=_messages,
                 tools=self.tools.__obj__,
                 tool_choice="auto",
