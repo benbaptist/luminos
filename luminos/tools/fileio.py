@@ -91,19 +91,24 @@ class FileIO(BaseTool):
         return "Successfully appended to {path}"
 
     def delete(self, path):
-        """
-        openai.function: Delete a file at the specified path.
+        """openai.function: Delete a file at the specified path.
 
         path
 
         :param str path: The path of the file to delete.
         """
-
-        self.safe(f"Delete file {path}")
-
-        os.remove(path)
-
-        return f"Successfully deleted {path}"
+        import os
+        try:
+            if os.path.isfile(path) or os.path.islink(path):
+                os.remove(path)
+                print(f'File {path} has been deleted')
+            elif os.path.isdir(path):
+                os.rmdir(path)
+                print(f'Directory {path} has been deleted')
+            else:
+                print(f'Error: {path} is not a file or directory')
+        except Exception as e:
+            print(f'Error deleting {path}: {e}')
 
     def mkdir(self, path):
         """
