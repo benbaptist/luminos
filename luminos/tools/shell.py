@@ -14,6 +14,8 @@ class Shell(BaseTool):
         :param str command: The command to execute.
         :param int timeout: Time in seconds to wait for command to execute, default is 60.
         """
+        if '&&' in command:
+            raise Exception('Cannot use `&&` in shell call')
 
         self.safe(f"Run `{command}`")
 
