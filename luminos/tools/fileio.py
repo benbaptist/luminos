@@ -5,7 +5,8 @@ class FileIO(BaseTool):
     name = "fileio"
 
     def list(self, path):
-        """openai.function: List the contents of a directory
+        """
+        openai.function: List the contents of a directory
 
         path
 
@@ -28,20 +29,25 @@ class FileIO(BaseTool):
 
         return dir
     
-    def read(self, path):
-        """openai.function: Read the contents of a file. If you are unsure of what names exist, use fileio_list.
+    def read(self, path, line_numbers=False):
+        """
+        openai.function: Read the contents of a file. If you are unsure of what names exist, use fileio_list.
 
         path
 
         :param str path: The path of the file to read.
+        :param bool line_numbers: Whether or not to read with line numbers activated. This is useful IF you are going to use the fileio_edit function to modify/patch a part of the file. If you use fileio_write, NEVER bake the line numbers into the file itself, unless instructed explicitly to do so.
         """
         
         with open(path, "r") as f:
-            return f.read()
+            if line_numbers:
+                return '\n'.join([f'{i+1} | {line}' for i, line in enumerate(f.read().split('\n'))])
+            else:
+                return f.read()
         
     def create(self, path):
         """
-        openai.function: Create a new file at the specified path. If you are wanting to write data to the file, you do not need to do this first. You can just use fileio_write directly.
+        openai.function: Create a new file at the specified path. If you are wanting to write data to the file, you can just use fileio_write directly, and skip this step.
 
         path
 
@@ -189,25 +195,25 @@ class FileIO(BaseTool):
 
         return tree_structure(directory)
 
-    def edit(self, path, changes):
-        """
-        openai.function: Modify/patch a file by specifying a list of each line that needs changing and the replacement string for that line.
+    # def edit(self, path, changes):
+    #     """
+    #     openai.function: Modify/patch a file by specifying a list of each line that needs changing and the replacement string for that line.
 
-        path, changes
+    #     path, changes
 
-        :param str path: The path of the file to edit.
-        :param list changes: List of tuples containing line numbers and replacement strings.
-        """
-        try:
-            with open(path, 'r') as file:
-                lines = file.readlines()
+    #     :param str path: The path of the file to edit.
+    #     :param list changes: List of tuples containing line numbers and replacement strings.
+    #     """
+    #     try:
+    #         with open(path, 'r') as file:
+    #             lines = file.readlines()
 
-            for line_num, replacement in changes:
-                lines[line_num] = replacement
+    #         for line_num, replacement in changes:
+    #             lines[line_num] = replacement
 
-            with open(path, 'w') as file:
-                file.writelines(lines)
+    #         with open(path, 'w') as file:
+    #             file.writelines(lines)
 
-            return f'Successfully edited {path}'
-        except Exception as e:
-            return f'Error editing {path}: {e}'
+    #         return f'Successfully edited {path}'
+    #     except Exception as e:
+    #         return f'Error editing {path}: {e}'
