@@ -188,3 +188,26 @@ class FileIO(BaseTool):
             return tree_str
 
         return tree_structure(directory)
+
+    def edit(self, path, changes):
+        """
+        openai.function: Modify/patch a file by specifying a list of each line that needs changing and the replacement string for that line.
+
+        path, changes
+
+        :param str path: The path of the file to edit.
+        :param list changes: List of tuples containing line numbers and replacement strings.
+        """
+        try:
+            with open(path, 'r') as file:
+                lines = file.readlines()
+
+            for line_num, replacement in changes:
+                lines[line_num] = replacement
+
+            with open(path, 'w') as file:
+                file.writelines(lines)
+
+            return f'Successfully edited {path}'
+        except Exception as e:
+            return f'Error editing {path}: {e}'
