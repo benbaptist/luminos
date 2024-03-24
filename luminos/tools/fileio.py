@@ -29,11 +29,11 @@ class FileIO(BaseTool):
 
         return dir
     
-    def read(self, path, line_numbers=True):
+    def read(self, path, line_numbers=False):
         """
         openai.function: Read the contents of a file. If you are unsure of what names exist, use fileio_list.
 
-        path,line_numbers
+        path
 
         :param str path: The path of the file to read.
         :param bool line_numbers: Whether or not to read with line numbers activated. This is useful IF you are going to use the fileio_edit function to modify/patch a part of the file. If you use fileio_write, NEVER bake the line numbers into the file itself, unless instructed explicitly to do so.
@@ -195,29 +195,30 @@ class FileIO(BaseTool):
 
         return tree_structure(directory)
 
-    def edit(self, path, changes):
-        """openai.function: Modify/patch a file by specifying a list of each line that needs changing and the replacement string for that line.
+    # Disabled for now - doesn't work quite well.
+    # def edit(self, path, changes):
+    #     """openai.function: Modify/patch a file by specifying a list of each line that needs changing and the replacement string for that line.
 
-        path,changes
+    #     path,changes
 
-        :param str path: The path of the file to edit.
-        :param list changes: Array of arrays containing line numbers and replacement strings. e.g. [[5, 'i am line five'], [10, 'i am line ten']]
-        """
-        self.safe(f"Edit {path} with {len(changes)} lines changed")
+    #     :param str path: The path of the file to edit.
+    #     :param list changes: Array of arrays containing line numbers and replacement strings. e.g. [[5, 'i am line five'], [10, 'i am line ten']]
+    #     """
+    #     self.safe(f"Edit {path} with {len(changes)} lines changed")
 
-        try:
-            with open(path, 'r') as file:
-                lines = file.read().splitlines()
+    #     try:
+    #         with open(path, 'r') as file:
+    #             lines = file.read().splitlines()
 
-            for line_num, replacement in changes:
-                try:
-                    lines[line_num - 1] = replacement
-                except IndexError:
-                    lines.insert(line_num - 1, replacement)
+    #         for line_num, replacement in changes:
+    #             try:
+    #                 lines[line_num - 1] = replacement
+    #             except IndexError:
+    #                 lines.insert(line_num - 1, replacement)
 
-            with open(path, 'w') as file:
-                file.write("\n".join(lines))
+    #         with open(path, 'w') as file:
+    #             file.write("\n".join(lines))
 
-            return f'Successfully edited {path} with {len(changes)} line changes'
-        except Exception as e:
-            raise Exception(f'Error editing {path}: {e}')
+    #         return f'Successfully edited {path} with {len(changes)} line changes'
+    #     except Exception as e:
+    #         raise Exception(f'Error editing {path}: {e}')
