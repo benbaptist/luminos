@@ -1,5 +1,4 @@
 from .basetool import BaseTool
-
 import os
 
 class FileIO(BaseTool):
@@ -165,7 +164,8 @@ class FileIO(BaseTool):
         """
         os.chdir(path)
         return f"Changed working directory to {path}"
-    def directory_tree(self, directory):
+
+    def walk(self, directory):
         """
         openai.function: Walk the directory tree and return a formatted filesystem tree.
 
