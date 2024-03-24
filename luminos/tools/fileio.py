@@ -165,3 +165,29 @@ class FileIO(BaseTool):
         """
         os.chdir(path)
         return f"Changed working directory to {path}"
+    def directory_tree(self, directory):
+        """
+        openai.function: Walk the directory tree and return a formatted filesystem tree.
+
+        directory
+
+        :param str directory: The directory to walk.
+        """
+        import os
+
+        def tree_structure(start_path, level=0):
+            tree_str = ''
+            for root, dirs, files in os.walk(start_path):
+                indent = '    ' * level
+                tree_str += f'{indent}+ {root}
+'
+                for dir in sorted(dirs):
+                    tree_str += f'{indent}    - {dir}
+'
+                for file in sorted(files):
+                    tree_str += f'{indent}    * {file}
+'
+                level += 1
+            return tree_str
+
+        return tree_structure(directory)
