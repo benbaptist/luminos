@@ -179,14 +179,11 @@ class FileIO(BaseTool):
             tree_str = ''
             for root, dirs, files in os.walk(start_path):
                 indent = '    ' * level
-                tree_str += f'{indent}+ {root}
-'
+                tree_str += f'{indent}+ {root}]\n'
                 for dir in sorted(dirs):
-                    tree_str += f'{indent}    - {dir}
-'
+                    tree_str += f'{indent}    - {dir}\n'
                 for file in sorted(files):
-                    tree_str += f'{indent}    * {file}
-'
+                    tree_str += f'{indent}    * {file}\n'
                 level += 1
             return tree_str
 
