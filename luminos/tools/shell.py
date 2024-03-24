@@ -7,7 +7,7 @@ class Shell(BaseTool):
     name = "shell"
 
     def run(self, command, timeout=60):
-        """openai.function: Executes a command in the shell.
+        """openai.function: Executes a command in the shell. Try not to run commands that will hang or block indefinitely. If a command does hang, timeout will protect from an indefinite hang and kill it after the specified timeout.
 
         command,timeout
 
