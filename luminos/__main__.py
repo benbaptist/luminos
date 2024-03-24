@@ -1,7 +1,8 @@
-import click
 from luminos.core import Core
+import click
 import os
 import signal
+
 from prompt_toolkit import prompt, print_formatted_text
 from prompt_toolkit.key_binding import KeyBindings
 from prompt_toolkit.styles import Style
