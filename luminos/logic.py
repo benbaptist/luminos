@@ -15,7 +15,7 @@ style = Style.from_dict({
     'gpt': 'ansiwhite bg:ansiblack', # Grey text for GPT prompt
 })
 
-class Core:
+class Logic:
     def __init__(self):
         self.messages = []
 
@@ -31,7 +31,7 @@ class Core:
         
         self.tools = Tools()
 
-    def run_llm(self, txt):
+    def generate_response(self, txt):
         self.messages.append(
             {
                 "role": "user",
@@ -95,16 +95,4 @@ class Core:
                     else:
                         raise Exception(f"Invalid tool_type {tool_type}")
             else:
-                cwd = os.getcwd()
-                if len(cwd) > 20:
-                    display_cwd = '...' + cwd[-17:]
-                else:
-                    display_cwd = cwd
-                formatted_message = FormattedText([
-                    ('class:gpt', f"[gpt@luminos {display_cwd}]# {message}")
-                ])
-                print_formatted_text(formatted_message, style=style)
-
-            # Check if the finish code has been set
-            if finish_reason == "stop":
-                return
+                return {'message': message, 'model': self.llm_model}

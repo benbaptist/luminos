@@ -1,59 +1,22 @@
-from luminos.core import Core
+from luminos.logic import Logic
+from luminos.input import get_user_input, style_normal, style_warning
+
 import click
 import os
 import signal
-
-from prompt_toolkit import prompt, print_formatted_text
-from prompt_toolkit.key_binding import KeyBindings
-from prompt_toolkit.styles import Style
-from prompt_toolkit.formatted_text import FormattedText
-
 import readline
-import os
+from prompt_toolkit import print_formatted_text
+from prompt_toolkit.formatted_text import FormattedText
+from prompt_toolkit.styles import Style
 
-bindings = KeyBindings()
-
-style_normal = Style.from_dict({
-    'prompt': 'ansicyan bold',
+style = Style.from_dict({
+    'response': 'ansiwhite', # White text for response
+    'model': 'ansigreen', # Green text for model name
 })
-
-style_warning = Style.from_dict({
-    'prompt': 'ansired bold',
-    'warning': 'bg:ansired ansiwhite bold',
-})
-
-import rlcompleter
-readline.parse_and_bind('tab: complete')
-import atexit
-histfile = os.path.expanduser("~/.luminos_history")
-try:
-    readline.read_history_file(histfile)
-except FileNotFoundError:
-    pass
-atexit.register(readline.write_history_file, histfile)
-
-@bindings.add("\x01")
-def history_previous(event):
-    readline.write_history_file(histfile)
-    readline.read_history_file(histfile)
-    result = readline.get_current_history_length()
-    try:
-        readline.replace_history_item(result - 1, readline.get_history_item(result - 1))
-    except: pass
-
-@bindings.add("\x02")
-def history_next(event):
-    readline.write_history_file(histfile)
-    readline.read_history_file(histfile)
-    result = readline.get_current_history_length()
-    if result < readline.get_current_history_length():
-        try:
-            readline.replace_history_item(result - 1, readline.get_history_item(result - 1))
-        except: pass
 
 class Main:
     def __init__(self):
-        self.core = Core()
+        self.logic = Logic()
         self.exit_signal_count = 0
         signal.signal(signal.SIGINT, self.handle_sigint)
 
@@ -91,21 +54,24 @@ class Main:
         while True:
             try:
                 cwd = os.getcwd()
+
                 if len(cwd) > 20:
                     display_cwd = '...' + cwd[-17:]
                 else:
                     display_cwd = cwd
-                user_input = ''
-                while not user_input.strip():
-                    user_input = prompt(f"[user@luminos {display_cwd}]$ ", style=current_style, key_bindings=bindings)
-                
-                self.core.run_llm(user_input)
+                    
+                user_input = get_user_input(style=current_style, display_cwd=display_cwd)
+                response = self.logic.generate_response(user_input)
+                formatted_response = FormattedText([
+                    ('class:response', response['message'] + '\n'),
+                    ('class:model', 'Model: ' + response['model'])
+                ])
+                print_formatted_text(formatted_response, style=style)
             except EOFError:
                 print("\nExiting...")
                 break
             except KeyboardInterrupt:
                 continue
-
 
 def main():
     @click.command()
