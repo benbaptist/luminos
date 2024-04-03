@@ -34,3 +34,7 @@ Here are several practical examples of how Luminos can assist in your daily task
 - **Enhanced Terminal Interactions:** Ask the LLM to execute precise commands or provide guidance on complex shell operations.
 
 By enhancing your shell with the capabilities of LLMs, Luminos transforms how you interact with your digital environment, enriching your command-line experience with intelligence and flexibility.
+
+## Project Overview
+
+This project is almost entirely AI-generated and self-written using the Luminos tool itself. It was a key goal of Luminos to demonstrate the power and potential of AI-driven development by creating a tool that could autonomously evolve and adapt to user requirements. The seamless integration of AI-generated content within this project showcases the innovative capabilities that Luminos brings to the table.
