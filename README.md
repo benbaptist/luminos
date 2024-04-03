@@ -11,17 +11,6 @@ Luminos is a Command-Line Interface (CLI) utility that facilitates the integrati
 - **Versatile Task Handling:** Perform a variety of tasks, from file operations to HTTP requests, with the assistance of LLMs.
 
 ## Installation
-
-### Install via pip3
-
-You can install Luminos using pip3 by running the following command:
-
-```
-pip3 install luminos
-```
-
-### Install from Git Repository
-
 To install Luminos from the Git repository, use the following command:
 
 ```
