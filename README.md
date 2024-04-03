@@ -1,40 +1,58 @@
-# Luminos - CLI Utility for Integrating LLMs into the Shell
+# Luminos - CLI Utility for Integrating Large Language Models into the Shell
 
-Luminos is a powerful Command-Line Interface (CLI) utility designed to effectively bridge Large Language Models (LLMs) with your shell environment. By granting LLMs direct access to a wide range of functionalities, Luminos empowers users to leverage the intelligence of LLMs for a myriad of tasks right from their terminal. This utility does not just extend the shell's capabilities to the user but significantly enhances them by providing LLMs with direct access to the file system, HTTP requests, and more, thereby assisting users in ways previously unattainable with traditional command-line tools.
+## Overview
+
+Luminos is a Command-Line Interface (CLI) utility that facilitates the integration of Large Language Models (LLMs) into the shell environment. By bridging the gap between traditional command-line tools and advanced language models, Luminos offers a unique and powerful way to interact with LLMs directly within the terminal.
 
 ## Features
 
-- **Direct Filesystem Access:** Luminos grants LLMs direct access to the filesystem, enabling them to perform file manipulations, data processing, and more.
-- **Interactive Shell Integration:** Seamlessly integrate LLM capabilities into your command-line experience, allowing for interactive, conversational utility.
-- **Versatile Task Handling:** From renaming files based on their size to making HTTP requests or filtering through data, Luminos empowers users to perform a wide range of tasks efficiently.
+- **Direct Filesystem Access:** Luminos provides LLMs with direct access to the filesystem, enabling tasks such as file manipulation and data processing.
+- **Interactive Shell Integration:** Seamlessly integrate LLM capabilities into the command-line interface for an interactive experience.
+- **Versatile Task Handling:** Perform a variety of tasks, from file operations to HTTP requests, with the assistance of LLMs.
 
-## Usage
+## Installation
 
-To start using Luminos, run it from your terminal:
+### Install via pip3
+
+You can install Luminos using pip3 by running the following command:
+
+```
+pip3 install luminos
+```
+
+### Install from Git Repository
+
+To install Luminos from the Git repository, use the following command:
+
+```
+pip3 install git+https://github.com/benbaptist/luminos
+```
+
+## Getting Started
+
+To begin using Luminos, execute the following command in your terminal:
 
 ```
 luminos
 ```
 
-Or, to work within a specific directory:
+For working within a specific directory, provide the path like so:
 
 ```
 luminos path_to_dir
 ```
 
-Upon starting Luminos, an interactive shell session is established, granting the LLM direct access to your directory. Here, you can utilize the full capabilities of the LLM to manage tasks, ask questions, or request actions be performed within the context of your shell environment.
+Upon starting Luminos, an interactive shell session is initiated, allowing the LLM to interact with the directory specified. Utilize the LLM's capabilities to manage tasks, ask questions, or perform actions within the shell environment.
 
 ## Examples
 
-Here are several practical examples of how Luminos can assist in your daily tasks:
+Explore a few examples of how Luminos can enhance your daily tasks:
 
-- **File Renaming and Manipulation:** Directly instruct the LLM to rename, move, or modify files based on various criteria such as size, content, or metadata.
-- **Data Analysis and Processing:** Leverage the LLM's capabilities to analyze, sort, or summarize data according to your needs.
-- **HTTP Communication:** Perform HTTP requests through the shell, enabling interaction with online resources and APIs.
-- **Enhanced Terminal Interactions:** Ask the LLM to execute precise commands or provide guidance on complex shell operations.
+- **File Management:** Instruct the LLM to rename, move, or modify files based on specific criteria.
+- **Data Analysis:** Leverage the LLM for data analysis, sorting, and summarization tasks.
+- **HTTP Communication:** Conduct HTTP requests through the shell for interaction with online resources.
+- **Terminal Operations:** Get assistance and guidance from the LLM for executing commands and complex operations in the shell.
 
-By enhancing your shell with the capabilities of LLMs, Luminos transforms how you interact with your digital environment, enriching your command-line experience with intelligence and flexibility.
+## Project Background
 
-## Project Overview
-
-This project is almost entirely AI-generated and self-written using the Luminos tool itself. It was a key goal of Luminos to demonstrate the power and potential of AI-driven development by creating a tool that could autonomously evolve and adapt to user requirements. The seamless integration of AI-generated content within this project showcases the innovative capabilities that Luminos brings to the table.
+Luminos is an AI-driven project that showcases the capabilities of AI-generated content. The tool itself was utilized to develop most of the content within this project. This demonstrates the potential of AI-driven development and the seamless integration of AI-generated content to suit user needs.
