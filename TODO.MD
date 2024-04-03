@@ -4,6 +4,7 @@
 - [ ] More granular permission control
 - [ ] Detailed preview of permission request if specified, use nano/vi to showcase it. 
 - [ ] Better permission prompt
+    - [ ] Ability to deny permission with REASON, so you can explain to the LLM why you didn't give it the ability to do that action 
 - [ ] Up/down arrows dshould give you prompt history
 - [ ] Spinning animation while LLM is generating
 - [ ] Save sessions to ~/.config/luminos/sessions, remember them by directory, and prompt on launch if you want to load an existing session or start a new one
