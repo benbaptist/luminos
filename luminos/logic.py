@@ -47,7 +47,7 @@ class Logic:
             prompt = SYSTEM_PROMPT.format(
                 time=time.strftime("%Y-%m-%d %H:%M:%S"),
                 current_directory=os.getcwd(),
-                listing=str(os.listdir("."),
+                listing=str(os.listdir(".")),
                 username=getuser()
             )
 
