@@ -1,10 +1,8 @@
-- [X] Make prompt show current dir, like a shell
-- [X] Color formatting
-- [X] Better formatting of permission requests, etc.
-- [ ] More granular permission control
-- [ ] Detailed preview of permission request if specified, use nano/vi to showcase it. 
+- [ ] Save sessions in ~/.config/luminos, associate them with current directory, and prompt for recalling previous sessions upon launch. Show a list of old sessions and the option to either recall one or to proceed a fresh esssion
 - [ ] Better permission prompt
-    - [ ] Ability to deny permission with REASON, so you can explain to the LLM why you didn't give it the ability to do that action 
+    - [ ] Detailed preview of permission request if specified, use nano/vi to showcase it. 
+    - [ ] Ability to deny permission with REASON, so you can explain to the LLM why you didn't give it the ability to do that action
+    - [ ] More granular permission control
 - [ ] Up/down arrows dshould give you prompt history
 - [ ] Spinning animation while LLM is generating
 - [ ] Save sessions to ~/.config/luminos/sessions, remember them by directory, and prompt on launch if you want to load an existing session or start a new one

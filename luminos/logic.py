@@ -7,6 +7,9 @@ from openai import OpenAI
 import json
 import os
 import time
+
+from getpass import getuser
+
 from prompt_toolkit import print_formatted_text
 from prompt_toolkit.formatted_text import FormattedText
 from prompt_toolkit.styles import Style
@@ -44,7 +47,8 @@ class Logic:
             prompt = SYSTEM_PROMPT.format(
                 time=time.strftime("%Y-%m-%d %H:%M:%S"),
                 current_directory=os.getcwd(),
-                listing=str(os.listdir("."))
+                listing=str(os.listdir("."),
+                username=getuser()
             )
 
             _messages = [
