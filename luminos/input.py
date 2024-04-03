@@ -1,14 +1,17 @@
-from prompt_toolkit import prompt, print_formatted_text
-from prompt_toolkit.styles import Style
-from prompt_toolkit.key_binding import KeyBindings
-from prompt_toolkit.formatted_text import FormattedText
+from luminos.logic import Logic
 
 import readline
 import os
 import rlcompleter
 import atexit
 import signal
-from luminos.logic import Logic
+
+from getpass import getuser
+
+from prompt_toolkit import prompt, print_formatted_text
+from prompt_toolkit.styles import Style
+from prompt_toolkit.key_binding import KeyBindings
+from prompt_toolkit.formatted_text import FormattedText
 
 bindings = KeyBindings()
 
@@ -56,7 +59,7 @@ def history_next(event):
 def get_user_input(style, display_cwd):
     user_input = ''
     while not user_input.strip():
-        user_input = prompt(f"[user@luminos {display_cwd}]$ ", style=style, key_bindings=bindings)
+        user_input = prompt(f"[{getuser()}@luminos {display_cwd}]$ ", style=style, key_bindings=bindings)
     return user_input
 
 def start_user_interaction(permissive, directory, logic):
