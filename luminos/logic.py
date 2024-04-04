@@ -86,15 +86,10 @@ class Logic:
                         func_name = func.name
                         func_kwargs = json.loads(func.arguments)
 
-                        func_response = self.tools.call(func_name, func_kwargs)
+                        tool_return = self.tools.call(func_name, call_id, func_kwargs)
 
                         self.messages.append(
-                            {
-                                "tool_call_id": call_id,
-                                "role": "tool",
-                                "name": func_name,
-                                "content": json.dumps(func_response),
-                            }
+                            tool_return.serialize()
                         )
                     else:
                         raise Exception(f"Invalid tool_type {tool_type}")

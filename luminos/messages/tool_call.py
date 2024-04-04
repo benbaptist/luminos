@@ -8,6 +8,8 @@ class ToolCall(BaseMessage):
         self.arguments = arguments
 
     def serialize(self) -> dict:
+        # Return OpenAI-style tool_call
+
         return {
             'role': 'tool_call',
             'content': self.content,

@@ -2,11 +2,13 @@ from luminos.tools.fileio import FileIO
 from luminos.tools.http import HTTP
 from luminos.tools.shell import Shell
 
+from luminos.messages.tool_return import ToolReturn
+
 class Tools:
     def __init__(self):
         self.tools = [Shell, FileIO, HTTP]
 
-    def call(self, name, kwargs):
+    def call(self, name, call_id, kwargs):
         tool_name, function_name = name.split("_")
 
         for tool in self.tools:
@@ -21,11 +23,24 @@ class Tools:
 
                     print(f"\033[92m* {name}({kwargs_f})\033[0m")
                     
-                    return getattr(tool_cxt, function_name)(**kwargs)
+                    content = getattr(tool_cxt, function_name)(**kwargs)
+
+                    tool_return = ToolReturn(
+                        content=content,
+                        call_id=call_id,
+                        name=name
+                    )
                 except Exception as e:
-                    print(f"func returned error: {e}")
                     # Log and return error message to the LLM
-                    return f"Tool call failed with the following error: {e}"
+                    print(f"func returned error: {e}")
+                    err = f"Tool call failed with the following error: {e}"
+                    tool_return = ToolReturn(
+                        content=err,
+                        call_id=call_id,
+                        name=name
+                    )
+                
+                return tool_return
 
         raise EOFError(f"Couldn't find the method {name}")
     
