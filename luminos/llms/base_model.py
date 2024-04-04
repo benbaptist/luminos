@@ -2,9 +2,9 @@ from abc import ABC, abstractmethod
 from typing import List, Dict
 
 class BaseModel(ABC):
-    def __init__(self, api_key: str):
-        self.api_key = api_key
+    def __init__(self):
         self.messages = []
+        self.system_prompt = ""
 
     @abstractmethod
     def generate_response(self, prompt: str) -> str:

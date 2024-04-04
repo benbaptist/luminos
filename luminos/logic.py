@@ -25,7 +25,7 @@ class Logic:
         # Load settings from YAML configuration
         config = Config().settings
         self.api_key = config.get('OPENAI_API_KEY', '')
-        self.llm_model = config.get('LLM_MODEL', 'gpt-4-0125-preview') # Fetch the LLM model from configuration and store in instance variable
+        self.model = config.get('LLM_MODEL', 'gpt-4-0125-preview') # Fetch the model from configuration and store in instance variable
         
         if self.api_key:
             self.client = OpenAI(api_key=self.api_key)
@@ -59,7 +59,7 @@ class Logic:
             ] + self.messages
 
             response = self.client.chat.completions.create(
-                model=self.llm_model, # Use the LLM model from instance variable
+                model=self.model, # Use the LLM model from instance variable
                 messages=_messages,
                 tools=self.tools.__obj__,
                 tool_choice="auto",
@@ -99,4 +99,4 @@ class Logic:
                     else:
                         raise Exception(f"Invalid tool_type {tool_type}")
             else:
-                return {'message': message, 'model': self.llm_model}
+                return {'message': message, 'model': self.model}
