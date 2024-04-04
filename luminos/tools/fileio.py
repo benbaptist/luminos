@@ -1,5 +1,6 @@
 from .basetool import BaseTool
 import os
+import mimetypes
 
 class FileIO(BaseTool):
     name = "fileio"
@@ -195,30 +196,35 @@ class FileIO(BaseTool):
 
         return tree_structure(directory)
 
-    # Disabled for now - doesn't work quite well.
-    # def edit(self, path, changes):
-    #     """openai.function: Modify/patch a file by specifying a list of each line that needs changing and the replacement string for that line.
+    def readwalk(self, directory):
+        """
+        WALKS AND READS through the directories and files starting from 'directory'. Outputs the contents of all text files, excluding binary and hidden files.
 
-    #     path,changes
+        directory
 
-    #     :param str path: The path of the file to edit.
-    #     :param list changes: Array of arrays containing line numbers and replacement strings. e.g. [[5, 'i am line five'], [10, 'i am line ten']]
-    #     """
-    #     self.safe(f"Edit {path} with {len(changes)} lines changed")
+        :param str directory: The root directory to start walking through.
+        """
+        def is_text_file(filepath):
+            type, _ = mimetypes.guess_type(filepath)
+            return type is None or type.startswith('text')
+        
+        def is_hidden(filepath):
+            return os.path.basename(filepath).startswith('.')
 
-    #     try:
-    #         with open(path, 'r') as file:
-    #             lines = file.read().splitlines()
+        output = []
 
-    #         for line_num, replacement in changes:
-    #             try:
-    #                 lines[line_num - 1] = replacement
-    #             except IndexError:
-    #                 lines.insert(line_num - 1, replacement)
+        for root, dirs, files in os.walk(directory):
+            dirs[:] = [d for d in dirs if not is_hidden(os.path.join(root, d))]  # Exclude hidden directories
+            for file in files:
+                if not is_hidden(file):
+                    file_path = os.path.join(root, file)
+                    if is_text_file(file_path):
+                        try:
+                            with open(file_path, 'r', encoding='utf-8') as f:
+                                content = f.read()
+                            output.append(f'<content path="{file_path}">{content}</content>')
+                        except UnicodeDecodeError:
+                            # This handles the rare case where mimetypes considers a binary file as text.
+                            pass
 
-    #         with open(path, 'w') as file:
-    #             file.write("\n".join(lines))
-
-    #         return f'Successfully edited {path} with {len(changes)} line changes'
-    #     except Exception as e:
-    #         raise Exception(f'Error editing {path}: {e}')
+        return '\n'.join(output)
