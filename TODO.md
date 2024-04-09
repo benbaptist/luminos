@@ -9,3 +9,4 @@
 - [ ] Save sessions to ~/.config/luminos/sessions, remember them by directory, and prompt on launch if you want to load an existing session or start a new one
 - [ ] Better code structure, more organized
 - [ ] Handle token overflows properly
+- [ ] Fully implement Anthropic API

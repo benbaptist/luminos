@@ -4,6 +4,7 @@ from luminos.system_prompt import SYSTEM_PROMPT
 
 from luminos.models.base_model import BaseModel
 from luminos.models.openai.gpt35 import GPT35
+from luminos.models.anthropic import BaseAnthropic
 
 from luminos.messages.base_message import BaseMessage
 from luminos.messages.system import System
@@ -25,6 +26,7 @@ from prompt_toolkit.styles import Style
 class Logic:
     def __init__(self, app):
         self.app = app
+        # self.model = BaseAnthropic(None, model="claude-3-sonnet-20240229")
         self.model = GPT35(api_key=self.app.config.settings["OPENAI_API_KEY"])
         self.model.tools = Tools()
 

@@ -15,7 +15,7 @@ style_normal = Style.from_dict({
 })
 
 style_warning = Style.from_dict({
-    'prompt': 'ansiwhite',
+    'prompt': 'ansiwhite bold ansired',
     'warning': 'bg:ansired ansiwhite bold',
 })
 
