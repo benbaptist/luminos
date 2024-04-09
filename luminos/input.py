@@ -106,11 +106,18 @@ def start_user_interaction(permissive, directory, logic):
                 display_cwd = cwd
                 
             user_input = get_user_input(current_style, display_cwd)
+            
             response = logic.generate_response(user_input)
+
+            if not response:
+                print("No response generated. This is likely a Luminos error.")
+                return
+
             formatted_response = FormattedText([
-                ('class:response', response['message'] + '\n'),
-                ('class:model', 'Model: ' + response['model'])
+                ('class:response', response.content + '\n'),
+                ('class:model', 'Model: ' + str(response.model))
             ])
+            
             print_formatted_text(formatted_response, style=style_response)
         except EOFError:
             print("\nExiting...")

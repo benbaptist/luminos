@@ -27,8 +27,8 @@ class Tools:
 
                     tool_return = ToolReturn(
                         content=content,
-                        call_id=call_id,
-                        name=name
+                        id=call_id,
+                        name=name,
                     )
                 except Exception as e:
                     # Log and return error message to the LLM
@@ -36,7 +36,7 @@ class Tools:
                     err = f"Tool call failed with the following error: {e}"
                     tool_return = ToolReturn(
                         content=err,
-                        call_id=call_id,
+                        id=call_id,
                         name=name
                     )
                 

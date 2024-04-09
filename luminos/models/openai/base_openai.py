@@ -11,6 +11,8 @@ from ..base_model import BaseModel
 from openai import OpenAI
 from typing import List
 
+import json
+
 class BaseOpenAI(BaseModel):
     def __init__(self, api_key: str, model: str):
         super().__init__()
@@ -19,18 +21,39 @@ class BaseOpenAI(BaseModel):
         self.model = model
         self.client = OpenAI(api_key=self.api_key)
 
+    def __str__(self):
+        return self.model
+
     def generate_response(self) -> Response:
-        serialized_messages = [message.serialize() for message in messages]
+        serialized_messages = [message.serialize() for message in self.messages]
+
         response = self.client.chat.completions.create(
             model=self.model,
             messages=serialized_messages,
-            tools={},
+            tools=self.tools.__obj__,
             tool_choice="auto",
         )
-        content = response.choices[0].message.content
+        
+        choice = response.choices[0]
+        
+        content = choice.message.content
+        finish_reason = choice.finish_reason
 
         # Parse tool calls from the response
-        tool_calls_data = response.choices[0].message.get('tool_calls', [])
-        tool_calls = [ToolCall(content=data['content'], tool_call_id=data['id'], name=data['name'], arguments=data['arguments']) for data in tool_calls_data]
-        
-        return Response(content=content, model=self.model, tool_calls=tool_calls)
+        tool_calls = []
+
+        if finish_reason == "tool_calls":
+            tool_calls_data = response.choices[0].message.tool_calls
+
+            tool_calls = [
+                ToolCall(content=data.function, id=data.id, type=data.type) for data in tool_calls_data
+            ]
+
+            msg = Assistant(content)
+            msg.tool_calls = tool_calls
+
+            self.messages.append(msg)
+        else:
+            self.messages.append(Assistant(content))
+            
+        return Response(content=content, model=self.model, tool_calls=tool_calls, finish_reason=finish_reason)
