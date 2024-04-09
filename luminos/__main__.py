@@ -1,11 +1,13 @@
 from luminos.logic import Logic
+from luminos.config import Config
 from luminos.input import get_user_input, start_user_interaction
 
 import click
 
 class Main:
     def __init__(self):
-        self.logic = Logic()
+        self.config = Config()
+        self.logic = Logic(self)
 
     def start(self, permissive, directory):
         start_user_interaction(permissive, directory, self.logic)

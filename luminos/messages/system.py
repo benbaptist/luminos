@@ -1,6 +1,6 @@
 from luminos.messages.base_message import BaseMessage
 
-class SystemMessage(BaseMessage):
+class System(BaseMessage):
     def serialize(self) -> dict:
         # Return OpenAI-style system role
         

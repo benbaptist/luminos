@@ -2,7 +2,16 @@ from luminos.tools import Tools
 from luminos.config import Config
 from luminos.system_prompt import SYSTEM_PROMPT
 
-from openai import OpenAI
+from luminos.models.base_model import BaseModel
+from luminos.models.openai.gpt35 import GPT35
+
+from luminos.messages.base_message import BaseMessage
+from luminos.messages.system import System
+from luminos.messages.user import User
+from luminos.messages.assistant import Assistant
+from luminos.messages.tool_call import ToolCall
+from luminos.messages.tool_return import ToolReturn
+from luminos.messages.response import Response
 
 import json
 import os
@@ -19,62 +28,34 @@ style = Style.from_dict({
 })
 
 class Logic:
-    def __init__(self):
-        self.messages = []
-
-        # Load settings from YAML configuration
-        config = Config().settings
-        self.api_key = config.get('OPENAI_API_KEY', '')
-        self.model = config.get('LLM_MODEL', 'gpt-4-0125-preview') # Fetch the model from configuration and store in instance variable
-        
-        if self.api_key:
-            self.client = OpenAI(api_key=self.api_key)
-        else:
-            self.client = OpenAI()
-        
+    def __init__(self, app):
+        self.app = app
+        self.model = GPT35(api_key=self.app.config.settings["OPENAI_API_KEY"])
         self.tools = Tools()
 
     def generate_response(self, txt):
-        self.messages.append(
-            {
-                "role": "user",
-                "content": txt
-            }
-        )
+        self.model.messages.append(User(txt))
 
         while True:
-            # Run the LLM
-            prompt = SYSTEM_PROMPT.format(
+            self.model.system_prompt = SYSTEM_PROMPT.format(
                 time=time.strftime("%Y-%m-%d %H:%M:%S"),
                 current_directory=os.getcwd(),
                 listing=str(os.listdir(".")),
                 username=getuser()
             )
 
-            _messages = [
-                {
-                    "role": "system",
-                    "content": prompt
-                }
-            ] + self.messages
+            response = self.model.generate_response()
 
-            response = self.client.chat.completions.create(
-                model=self.model, # Use the LLM model from instance variable
-                messages=_messages,
-                tools=self.tools.__obj__,
-                tool_choice="auto",
-            )
+            # TODO: if finish_reason == "tool_calls":
+            # else: return {'message': message, 'model': self.model}
 
-            # Extract the response message and tool calls
-            choice = response.choices[0]
-            
-            message = choice.message.content
-            finish_reason = choice.finish_reason
+            if response:
+                content = response['message']
+                model = response['model']
 
-            self.messages.append(choice.message)
+                self.model.messages.append(Assistant(txt))
 
-            if finish_reason == "tool_calls":
-                tool_calls = choice.message.tool_calls
+                tool_calls = response.get('tool_calls', [])
 
                 for tool_call in tool_calls:
                     call_id = tool_call.id
@@ -82,16 +63,13 @@ class Logic:
 
                     if tool_type == "function":
                         func = tool_call.function
-
                         func_name = func.name
                         func_kwargs = json.loads(func.arguments)
 
                         tool_return = self.tools.call(func_name, call_id, func_kwargs)
 
-                        self.messages.append(
-                            tool_return.serialize()
-                        )
+                        self.model.messages.append(tool_return)
                     else:
                         raise Exception(f"Invalid tool_type {tool_type}")
-            else:
-                return {'message': message, 'model': self.model}
+
+                return True

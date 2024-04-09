@@ -1,4 +1,4 @@
-from luminos.llms.base_openai import BaseOpenAI
+from luminos.models.openai.base_openai import BaseOpenAI
 
 class GPT35(BaseOpenAI):
     def __init__(self, api_key: str):

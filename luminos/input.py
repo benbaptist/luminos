@@ -30,31 +30,31 @@ style_response = Style.from_dict({
 })
 
 readline.parse_and_bind('tab: complete')
-histfile = os.path.expanduser("~/.luminos_history")
-try:
-    readline.read_history_file(histfile)
-except FileNotFoundError:
-    pass
-atexit.register(readline.write_history_file, histfile)
+# histfile = os.path.expanduser("~/.luminos_history")
+# try:
+#     readline.read_history_file(histfile)
+# except FileNotFoundError:
+#     pass
+# atexit.register(readline.write_history_file, histfile)
 
-@bindings.add("\x01")
-def history_previous(event):
-    readline.write_history_file(histfile)
-    readline.read_history_file(histfile)
-    result = readline.get_current_history_length()
-    try:
-        readline.replace_history_item(result - 1, readline.get_history_item(result - 1))
-    except: pass
+# @bindings.add("\x01")
+# def history_previous(event):
+#     readline.write_history_file(histfile)
+#     readline.read_history_file(histfile)
+#     result = readline.get_current_history_length()
+#     try:
+#         readline.replace_history_item(result - 1, readline.get_history_item(result - 1))
+#     except: pass
 
-@bindings.add("\x02")
-def history_next(event):
-    readline.write_history_file(histfile)
-    readline.read_history_file(histfile)
-    result = readline.get_current_history_length()
-    if result < readline.get_current_history_length():
-        try:
-            readline.replace_history_item(result - 1, readline.get_history_item(result - 1))
-        except: pass
+# @bindings.add("\x02")
+# def history_next(event):
+#     readline.write_history_file(histfile)
+#     readline.read_history_file(histfile)
+#     result = readline.get_current_history_length()
+#     if result < readline.get_current_history_length():
+#         try:
+#             readline.replace_history_item(result - 1, readline.get_history_item(result - 1))
+#         except: pass
 
 def get_user_input(style, display_cwd):
     user_input = ''
