@@ -9,7 +9,10 @@ class Tools:
         self.tools = [Shell, FileIO, HTTP]
 
     def call(self, name, call_id, kwargs):
-        tool_name, function_name = name.split("_")
+        try:
+            tool_name, function_name = name.split("_")
+        except ValueError:
+            raise EOFError(f"Unable to unpack method {name}")
 
         for tool in self.tools:
             if tool.name == tool_name and hasattr(tool, function_name):
