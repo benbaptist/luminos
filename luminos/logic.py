@@ -28,7 +28,7 @@ class Logic:
         self.app = app
         # self.model = BaseAnthropic(None, model="claude-3-sonnet-20240229")
         self.model = GPT35(api_key=self.app.config.settings["OPENAI_API_KEY"])
-        self.model.tools = Tools()
+        self.model.tools = Tools(self.model.ToolReturn)
 
     def generate_response(self, txt):
         self.model.messages.append(User(txt))
@@ -43,7 +43,7 @@ class Logic:
 
             response = self.model.generate_response()
 
-            if response.finish_reason == "tool_calls":
+            if response.finish_reason == "tool_calls" or len(response.tool_calls) > 0:
                 tool_calls = response.tool_calls
  
                 for tool_call in tool_calls:

@@ -5,10 +5,18 @@ from luminos.messages.base_message import BaseMessage
 from luminos.messages.system import System
 from luminos.messages.user import User
 from luminos.messages.assistant import Assistant
+from luminos.messages.tool_call import ToolCall
 from luminos.messages.tool_return import ToolReturn
 from luminos.messages.response import Response
 
 class BaseModel(ABC):
+    System = System
+    User = User
+    Assistant = Assistant
+    ToolCall = ToolCall
+    ToolReturn = ToolReturn
+    Response = Response
+
     def __init__(self):
         self.messages = []
         self.system_prompt = ""

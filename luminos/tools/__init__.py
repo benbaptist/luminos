@@ -2,10 +2,9 @@ from luminos.tools.fileio import FileIO
 from luminos.tools.http import HTTP
 from luminos.tools.shell import Shell
 
-from luminos.messages.tool_return import ToolReturn
-
 class Tools:
-    def __init__(self):
+    def __init__(self, ToolReturn):
+        self.ToolReturn = ToolReturn
         self.tools = [Shell, FileIO, HTTP]
 
     def call(self, name, call_id, kwargs):
@@ -28,7 +27,7 @@ class Tools:
                     
                     content = getattr(tool_cxt, function_name)(**kwargs)
 
-                    tool_return = ToolReturn(
+                    tool_return = self.ToolReturn(
                         content=content,
                         id=call_id,
                         name=name,
@@ -37,7 +36,7 @@ class Tools:
                     # Log and return error message to the LLM
                     print(f"func returned error: {e}")
                     err = f"Tool call failed with the following error: {e}"
-                    tool_return = ToolReturn(
+                    tool_return = self.ToolReturn(
                         content=err,
                         id=call_id,
                         name=name

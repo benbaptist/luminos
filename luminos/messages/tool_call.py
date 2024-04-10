@@ -7,15 +7,6 @@ class ToolCall(BaseMessage):
         self.type = type
         self.id = id
 
-    # I don't know what I was doing here.
-    # @property
-    # def name(self):
-    #     return self.content.name
-
-    # @property
-    # def arguments(self):
-    #     return self.content.arguments
-
     def serialize(self) -> dict:
         # Return OpenAI-style tool_call
 

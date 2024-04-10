@@ -77,7 +77,7 @@ class BaseTool:
 
             function = {
                 "name": f"{self.name}_{attr}",
-                "description": docstring.short_description,
+                "description": docstring.short_description[17:],
                 "parameters": {
                     "type": "object",
                     "properties": properties,
