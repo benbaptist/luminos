@@ -6,11 +6,11 @@ import os
 import signal
 from getpass import getuser
 from prompt_toolkit import prompt, print_formatted_text
-from prompt_toolkit.styles import Style
+from prompt_toolkit.styles import Style 
 from prompt_toolkit.key_binding import KeyBindings
 from prompt_toolkit.formatted_text import FormattedText
 
-bindings = KeyBindings()
+bindings = KeyBindings()  
 
 style_normal = Style.from_dict({
     'prompt': 'ansicyan bold',
@@ -22,8 +22,12 @@ style_warning = Style.from_dict({
 })
 
 style_response = Style.from_dict({
-    'response': 'ansiwhite',
+    'response': 'ansiwhite', 
     'model': 'ansigreen',
+})
+
+style_error = Style.from_dict({
+    'error': 'bg:ansired ansiwhite bold',
 })
 
 readline.parse_and_bind('tab: complete')
@@ -44,10 +48,10 @@ def start_user_interaction(permissive, directory, logic):
     def handle_sigint(signum, frame):
         nonlocal exit_signal_count
         if exit_signal_count == 0:
-            exit_signal_count += 1
+            exit_signal_count += 1 
             print('\nPress Ctrl+C again to exit...')
         else:
-            print('\nExiting...')
+            print('\nExiting...') 
             exit()
 
     signal.signal(signal.SIGINT, handle_sigint)
@@ -79,11 +83,13 @@ def start_user_interaction(permissive, directory, logic):
 
             user_input = get_user_input(current_style, display_cwd)
 
-            try: 
+            try:
                 response = logic.generate_response(user_input)
-            except ModelReturnError:
-                print("Failed to retrieve a response from the model. Please try again later.")
-                
+            except ModelReturnError as e:
+                error_message = FormattedText([
+                    ('class:error', f'Error: {e}'),
+                ])
+                print_formatted_text(error_message, style=style_error)
                 continue
 
             if not response:
