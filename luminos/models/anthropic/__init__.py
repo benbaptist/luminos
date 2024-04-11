@@ -40,7 +40,7 @@ class BaseAnthropic(BaseModel):
     ToolReturn = ToolReturn
     Assistant = Assistant
 
-    def __init__(self, api_key: str, model: str):
+    def __init__(self, api_key: str, model="claude-3-sonnet-20240229"):
         super().__init__()
         
         self.api_key = api_key
