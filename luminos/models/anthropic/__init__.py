@@ -65,6 +65,11 @@ class BaseAnthropic(BaseModel):
     def generate_response(self):
         serialized_messages = [msg.serialize() for msg in self.messages]
 
+        asst = self.Assistant("")
+        asst.model = self.model
+        
+        self.messages.append(asst)
+
         try:
             response = self.client.beta.tools.messages.create(
                 model=self.model,
@@ -79,13 +84,6 @@ class BaseAnthropic(BaseModel):
             print(e)
 
             raise ModelReturnError(f"BadRequestError: {e}")
-
-        tool_calls = []
-
-        asst = self.Assistant("")
-        asst.model = self.model
-        
-        self.messages.append(asst)
 
         for block in response.content:
             if type(block) == ToolUseBlock:

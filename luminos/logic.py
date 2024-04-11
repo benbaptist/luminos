@@ -1,5 +1,5 @@
 from luminos.tools import Tools
-from luminos.config import Config
+from luminos.config import (Config, get_model_class)
 from luminos.system_prompt import SYSTEM_PROMPT
 
 from luminos.models.base_model import BaseModel
@@ -27,7 +27,13 @@ from prompt_toolkit.styles import Style
 class Logic:
     def __init__(self, app):
         self.app = app
-        self.model = BaseAnthropic(None, model="claude-3-sonnet-20240229")
+        config = app.config.settings["model"]
+        provider = config["provider"]
+        name = config["name"]
+        
+        model_class = get_model_class(provider, name)
+        self.model = model_class(self.app.config.settings["api_key"][provider])
+        # self.model = BaseAnthropic(None, model="claude-3-sonnet-20240229")
         # self.model = GPT35(api_key=self.app.config.settings["OPENAI_API_KEY"])
         self.model.tools = Tools(self.model.ToolReturn)
 

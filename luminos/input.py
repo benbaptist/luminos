@@ -97,7 +97,7 @@ def start_user_interaction(permissive, directory, logic):
                 continue
 
             formatted_response = FormattedText([
-                ('class:response', f'[{response.model}@luminos]# {response.content}\n'),
+                ('class:response', f'[{response.model}]$ {response.content}\n'),
             ])
 
             print_formatted_text(formatted_response, style=style_response)
