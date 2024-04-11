@@ -76,11 +76,17 @@ def start_user_interaction(permissive, directory, logic):
             display_cwd = '...' + cwd[-17:] if len(cwd) > 20 else cwd
 
             user_input = get_user_input(current_style, display_cwd)
-            response = logic.generate_response(user_input)
+
+            try: 
+                response = logic.generate_response(user_input)
+            except ModelReturnError:
+                print("Failed to retrieve a response from the model. Please try again later.")
+                
+                continue
 
             if not response:
                 print("No response generated. This is likely a Luminos error.")
-                return
+                continue
 
             formatted_response = FormattedText([
                 ('class:response', f'[{response.model}@luminos]# {response.content}\n'),

@@ -8,11 +8,6 @@ class ToolReturn(BaseMessage):
         super().__init__(content)
         self.id = id
         self.name = name
-        # self.function = function
-
-    # @property
-    # def name(self):
-    #     return self.function["name"]
 
     def serialize(self) -> dict:
         # Return OpenAI-style tool_return

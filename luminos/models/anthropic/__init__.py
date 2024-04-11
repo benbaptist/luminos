@@ -10,6 +10,8 @@ from luminos.models.base_model import BaseModel
 from .messages.tool_return import ToolReturn
 from .messages.assistant import Assistant
 
+from luminos.exceptions import *
+
 from anthropic.types import (
     ContentBlock,
     ContentBlockDeltaEvent,
@@ -63,13 +65,16 @@ class BaseAnthropic(BaseModel):
     def generate_response(self):
         serialized_messages = [msg.serialize() for msg in self.messages]
 
-        response = self.client.beta.tools.messages.create(
-            model=self.model,
-            max_tokens=4096,
-            messages=serialized_messages,
-            system=self.system_prompt,
-            tools=self._tools
-        )
+        try:
+            response = self.client.beta.tools.messages.create(
+                model=self.model,
+                max_tokens=4096,
+                messages=serialized_messages,
+                system=self.system_prompt,
+                tools=self._tools
+            )
+        except anthropic.RateLimitError:
+            raise ModelReturnError("anthropic.RateLimitError occured")
 
         tool_calls = []
 
