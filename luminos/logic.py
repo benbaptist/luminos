@@ -9,7 +9,6 @@ from luminos.models.anthropic import BaseAnthropic
 from luminos.messages.base_message import BaseMessage
 from luminos.messages.system import System
 from luminos.messages.user import User
-from luminos.messages.assistant import Assistant
 from luminos.messages.tool_return import ToolReturn
 from luminos.messages.response import Response
 
@@ -26,8 +25,8 @@ from prompt_toolkit.styles import Style
 class Logic:
     def __init__(self, app):
         self.app = app
-        # self.model = BaseAnthropic(None, model="claude-3-sonnet-20240229")
-        self.model = GPT35(api_key=self.app.config.settings["OPENAI_API_KEY"])
+        self.model = BaseAnthropic(None, model="claude-3-sonnet-20240229")
+        # self.model = GPT35(api_key=self.app.config.settings["OPENAI_API_KEY"])
         self.model.tools = Tools(self.model.ToolReturn)
 
     def generate_response(self, txt):

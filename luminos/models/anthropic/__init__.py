@@ -1,7 +1,6 @@
 from luminos.messages.base_message import BaseMessage
 from luminos.messages.system import System
 from luminos.messages.user import User
-from luminos.messages.assistant import Assistant
 from luminos.messages.tool_call import ToolCall
 from luminos.messages.response import Response
 
@@ -65,7 +64,7 @@ class BaseAnthropic(BaseModel):
     def generate_response(self) -> Response:
         serialized_messages = [msg.serialize() for msg in self.messages]
 
-        # print(serialized_messages)
+        print("SERIALIZED", serialized_messages)
 
         response = self.client.beta.tools.messages.create(
             model=self.model,
@@ -76,6 +75,9 @@ class BaseAnthropic(BaseModel):
         )
 
         tool_calls = []
+
+        asst = self.Assistant("")
+        self.messages.append(asst)
 
         for block in response.content:
             if type(block) == ToolUseBlock:
@@ -90,12 +92,10 @@ class BaseAnthropic(BaseModel):
                     id=block.id
                 )
 
-                tool_calls.append(tool_call)
+                asst.tool_calls.append(tool_call)
 
                 content = ""
             elif type(block) == TextBlock:
-                content = response.content[0].text
-
-                self.messages.append(Assistant(content))
+                asst.content = response.content[0].text
         
-        return Response(content=content, model=self.model, tool_calls=tool_calls)
+        return Response(content=asst.content, model=self.model, tool_calls=tool_calls)

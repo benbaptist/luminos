@@ -36,6 +36,7 @@ class Tools:
                     # Log and return error message to the LLM
                     print(f"func returned error: {e}")
                     err = f"Tool call failed with the following error: {e}"
+                    
                     tool_return = self.ToolReturn(
                         content=err,
                         id=call_id,

@@ -9,17 +9,24 @@ class Assistant(Assistant):
         ]
 
         if len(self.tool_calls) > 0:
+            print("> 0")
+
             for tool_call in self.tool_calls:
+                print(tool_call)
+
                 content.append({
                     "type": "tool_use",
                     "id": tool_call.id,
                     "name": tool_call.content.name,
                     "input": {}
                 })
+                
         
         obj = {
             'role': 'assistant', 
             'content': content
         }
+
+        print("final boj", obj)
 
         return obj
