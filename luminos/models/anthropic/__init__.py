@@ -47,7 +47,7 @@ class BaseAnthropic(BaseModel):
         
         self.api_key = api_key
         self.model = model
-        self.client = anthropic.Anthropic() # api_key=self.api_key
+        self.client = anthropic.Anthropic(api_key=self.api_key)
 
     @property
     def _tools(self):
