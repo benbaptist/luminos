@@ -14,6 +14,8 @@ from typing import List
 import json
 
 class BaseOpenAI(BaseModel):
+    provider="openai"
+    
     def __init__(self, api_key: str, model: str):
         super().__init__()
 

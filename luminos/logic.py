@@ -49,7 +49,8 @@ class Logic:
             response = self.model.generate_response()
 
             if response.finish_reason == "tool_calls":
-                print(response.content)
+                if response.content:
+                    print(response.content)
                 
                 tool_calls = response.tool_calls
  

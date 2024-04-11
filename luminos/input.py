@@ -35,10 +35,12 @@ readline.parse_and_bind('tab: complete')
 
 # Handle user input and interactions
 
-def get_user_input(style, display_cwd):
+def get_user_input(style, display_cwd, logic):
     user_input = ''
+
     while not user_input.strip():
-        user_input = prompt(f"[{getuser()}@luminos {display_cwd}]$ ", style=style, key_bindings=bindings)
+        user_input = prompt(f"[{logic.model.model}@{logic.model.provider} {display_cwd}]$ ", style=style, key_bindings=bindings)
+
     return user_input
 
 
@@ -81,7 +83,7 @@ def start_user_interaction(permissive, directory, logic):
             cwd = os.getcwd()
             display_cwd = '...' + cwd[-17:] if len(cwd) > 20 else cwd
 
-            user_input = get_user_input(current_style, display_cwd)
+            user_input = get_user_input(current_style, display_cwd, logic)
 
             try:
                 response = logic.generate_response(user_input)
@@ -96,11 +98,7 @@ def start_user_interaction(permissive, directory, logic):
                 print("No response generated. This is likely a Luminos error.")
                 continue
 
-            formatted_response = FormattedText([
-                ('class:response', f'[{response.model}]$ {response.content}\n'),
-            ])
-
-            print_formatted_text(formatted_response, style=style_response)
+            print(response.content)
         except EOFError:
             print("\nExiting...")
             break

@@ -17,6 +17,9 @@ class BaseModel(ABC):
     ToolReturn = ToolReturn
     Response = Response
 
+    provider=None
+    model=None
+
     def __init__(self):
         self.messages = []
         self.system_prompt = ""
