@@ -63,8 +63,6 @@ class BaseAnthropic(BaseModel):
     def generate_response(self):
         serialized_messages = [msg.serialize() for msg in self.messages]
 
-        print("SERIALIZED", serialized_messages)
-
         response = self.client.beta.tools.messages.create(
             model=self.model,
             max_tokens=4096,

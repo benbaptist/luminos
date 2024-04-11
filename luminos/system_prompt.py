@@ -6,7 +6,9 @@ Please use functions as liberally as possible to help achieve the user's request
 
 You may use relative paths, relative to the current directory listed below. This will save time and tokens. DO NOT use absolute paths unless absolutely neccessary.
 
-*** SYSTEM INFO ***
+Below is some up-to-date information to keep you in the loop of the current state of things.
+
+*** CURRENT INFO ***
 User's username: {username} 
 Current directory: {current_directory}
 Listing of directories/files: {listing}
