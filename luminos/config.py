@@ -12,7 +12,7 @@ def get_model_class(provider, name):
             "gpt-4-0125-preview": GPT4
         },
         "anthropic": {
-            "claude6": BaseAnthropic
+            "claude3": BaseAnthropic
         }
     }
     try:
@@ -50,7 +50,7 @@ class Config:
             os.makedirs(os.path.dirname(self.config_path), exist_ok=True)
             with open(self.config_path, 'w') as config_file:
                 yaml.dump(default_full_config, config_file, default_flow_style=False)
-                
+
             print('Default config generated at:', self.config_path)
             config = default_full_config
         else:
