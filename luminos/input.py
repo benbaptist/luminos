@@ -1,4 +1,6 @@
 from luminos.logic import Logic
+from luminos.exceptions import *
+
 import readline
 import os
 import signal

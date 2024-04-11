@@ -3,9 +3,9 @@ from luminos.messages.tool_return import ToolReturn
 import json
 
 class ToolReturn(ToolReturn):
-    def __init__(self, content: str, name: str, id: str):
+    def __init__(self, content: str, name: str, id: str, error=False):
 
-        super().__init__(content, name, id)
+        super().__init__(content, name, id, error)
 
     def serialize(self) -> dict:
         # Return Anthropic-style tool_result
@@ -16,7 +16,8 @@ class ToolReturn(ToolReturn):
                 {
                     'type': "tool_result",
                     'tool_use_id': self.id,
-                    "content": json.dumps(self.content)
+                    "content": json.dumps(self.content),
+                    "is_error": self.error
                 }
             ]
         }

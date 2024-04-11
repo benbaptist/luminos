@@ -3,11 +3,12 @@ from luminos.messages.base_message import BaseMessage
 import json
 
 class ToolReturn(BaseMessage):
-    def __init__(self, content: str, name: str, id: str):
+    def __init__(self, content: str, name: str, id: str, error=False):
 
         super().__init__(content)
         self.id = id
         self.name = name
+        self.error = error
 
     def serialize(self) -> dict:
         # Return OpenAI-style tool_return

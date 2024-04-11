@@ -73,8 +73,12 @@ class BaseAnthropic(BaseModel):
                 system=self.system_prompt,
                 tools=self._tools
             )
-        except anthropic.RateLimitError:
-            raise ModelReturnError("anthropic.RateLimitError occured")
+        except anthropic.RateLimitError as e:
+            raise ModelReturnError(f"RateLimitError: {e}")
+        except anthropic.BadRequestError as e:
+            print(e)
+
+            raise ModelReturnError(f"BadRequestError: {e}")
 
         tool_calls = []
 

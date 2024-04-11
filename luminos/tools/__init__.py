@@ -40,7 +40,8 @@ class Tools:
                     tool_return = self.ToolReturn(
                         content=err,
                         id=call_id,
-                        name=name
+                        name=name,
+                        error=True
                     )
                 
                 return tool_return
