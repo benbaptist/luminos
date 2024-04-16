@@ -1,106 +1,115 @@
-from luminos.logic import Logic
-from luminos.exceptions import *
+"""Module for handling user input/output for Luminos"""
 
-import readline
 import os
 import signal
+import readline
 from getpass import getuser
-from prompt_toolkit import prompt, print_formatted_text
-from prompt_toolkit.styles import Style 
+from prompt_toolkit import PromptSession
+from prompt_toolkit.completion import WordCompleter
+from prompt_toolkit.formatted_text import HTML
 from prompt_toolkit.key_binding import KeyBindings
-from prompt_toolkit.formatted_text import FormattedText
+from prompt_toolkit.styles import Style
 
-bindings = KeyBindings()  
+from luminos.logic import Logic
+from luminos.exceptions import ModelReturnError
 
-style_normal = Style.from_dict({
-    'prompt': 'ansicyan bold',
-})
+class Input:
+    """Class for handling Luminos user input/output"""
 
-style_warning = Style.from_dict({
-    'prompt': 'ansiwhite bold ansired',
-    'warning': 'bg:ansired ansiwhite bold',
-})
+    def __init__(self, logic: Logic, permissive: bool = False, directory: str = None):
+        self.logic = logic
+        self.permissive = permissive
+        self.exit_signal_count = 0
+        self.cwd = os.getcwd() if not directory else directory
 
-style_response = Style.from_dict({
-    'response': 'ansiwhite', 
-    'model': 'ansigreen',
-})
+        self.styles = {
+            'normal': Style.from_dict({
+                'prompt': 'ansicyan bold',
+            }),
+            'warning': Style.from_dict({
+                'prompt': 'ansiwhite bold ansired',
+                'warning': 'bg:#ff0000 #ffffff bold',
+            }),
+            'response': Style.from_dict({
+                'response': 'ansiwhite',
+                'model': 'ansigreen',
+            }),
+            'error': Style.from_dict({
+                'error': 'bg:#ff0000 #ffffff bold',
+            }),
+        }
 
-style_error = Style.from_dict({
-    'error': 'bg:ansired ansiwhite bold',
-})
+        self.key_bindings = KeyBindings()
+        readline.parse_and_bind('tab: complete')
+        signal.signal(signal.SIGINT, self.handle_sigint)
 
-readline.parse_and_bind('tab: complete')
-
-
-# Handle user input and interactions
-
-def get_user_input(style, display_cwd, logic):
-    user_input = ''
-
-    while not user_input.strip():
-        user_input = prompt(f"[{logic.model.model}@{logic.model.provider} {display_cwd}]$ ", style=style, key_bindings=bindings)
-
-    return user_input
-
-
-def start_user_interaction(permissive, directory, logic):
-    exit_signal_count = 0
-
-    def handle_sigint(signum, frame):
-        nonlocal exit_signal_count
-        if exit_signal_count == 0:
-            exit_signal_count += 1 
-            print('\nPress Ctrl+C again to exit...')
+        if permissive:
+            self.enable_permissive_mode()
         else:
-            print('\nExiting...') 
+            os.environ['ALWAYS_GRANT_PERMISSION'] = '0'
+
+        self.session = self.create_prompt_session()
+
+    def enable_permissive_mode(self):
+        """Prompt for permissive mode and enable if confirmed"""
+        confirm = self.session.prompt(
+            HTML('<ansiwhite bold bg:#ff0000>WARNING: You have enabled '
+                 '"permissive" mode. This provides the LLM with unprompted '
+                 'privileged access, which can pose potential security risks. '
+                 'To proceed, type "YES": </ansiwhite>'),
+            style=self.styles['warning']
+        )
+        if confirm == 'YES':
+            os.environ['ALWAYS_GRANT_PERMISSION'] = '1'
+        else:
+            print('Operation cancelled. Exiting...')
             exit()
 
-    signal.signal(signal.SIGINT, handle_sigint)
+    def create_prompt_session(self):
+        """Create prompt session with current state"""
+        user_input = prompt(f"[{logic.model.model}@{logic.model.provider} {display_cwd}]$ ", style=style, key_bindings=bindings)
 
-    if permissive:
-        warning_message = FormattedText([
-            ('class:warning', 'WARNING: You have enabled "permissive" mode. This provides the LLM with unprompted privileged access, which can pose potential security risks. To proceed, type "YES": '),
-        ])
-        print_formatted_text(warning_message, style=style_warning)
-        user_response = prompt('>', style=style_warning)
+        return user_input
 
-        if user_response != 'YES':
-            print('Operation cancelled. Exiting...')
-            return
+    def handle_sigint(self, signum, frame):
+        """Handle Ctrl+C interrupt signal"""
+        if self.exit_signal_count == 0:
+            self.exit_signal_count += 1
+            print('\\nPress Ctrl+C again to exit...')
+        else:
+            print('\\nExiting...')
+            exit()
 
-        os.environ['ALWAYS_GRANT_PERMISSION'] = '1'
-        current_style = style_warning
-    else:
-        os.environ['ALWAYS_GRANT_PERMISSION'] = '0'
-        current_style = style_normal
-
-    if directory:
-        os.chdir(directory)
-
-    while True:
-        try:
-            cwd = os.getcwd()
-            display_cwd = '...' + cwd[-17:] if len(cwd) > 20 else cwd
-
-            user_input = get_user_input(current_style, display_cwd, logic)
-
+    def start(self):
+        """Start the Luminos input/output loop"""
+        while True:
             try:
-                response = logic.generate_response(user_input)
-            except ModelReturnError as e:
-                error_message = FormattedText([
-                    ('class:error', f'Error: {e}'),
-                ])
-                print_formatted_text(error_message, style=style_error)
+                user_input = self.session.prompt()
+
+                if user_input.lower() == 'exit':
+                    print('Exiting...')
+                    break
+
+                try:
+                    response = self.logic.generate_response(user_input)
+                except ModelReturnError as e:
+                    error = HTML(f'<ansiwhite bg:#ff0000>Error: {e}</ansiwhite>')
+                    print(error)
+                    continue
+
+                if not response:
+                    print("No response generated. This is likely a Luminos error.")
+                    continue
+
+                print(response.content)
+
+            except EOFError:
+                print("\\nExiting...")
+                break
+            except KeyboardInterrupt:
                 continue
 
-            if not response:
-                print("No response generated. This is likely a Luminos error.")
-                continue
-
-            print(response.content)
-        except EOFError:
-            print("\nExiting...")
-            break
-        except KeyboardInterrupt:
-            continue
+if __name__ == "__main__":
+    logic = Logic()
+    userio = UserIO(logic)
+    userio.start()
