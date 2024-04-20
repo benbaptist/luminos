@@ -27,14 +27,22 @@ from prompt_toolkit.formatted_text import FormattedText
 from prompt_toolkit.styles import Style
 
 class Logic:
-    def __init__(self, app):
+    def __init__(self, app, model=None, api_key=None):
         self.app = app
-        config = app.config.settings["model"]
-        provider = config["provider"]
-        name = config["name"]
-        
+
+        # if model and api_key are provided, use them
+        # otherwise, fallback to the configuration
+        if model:
+            provider, name = model
+        else:
+            config = app.config.settings["model"]
+            provider = config["provider"]
+            name = config["name"]
+          
+        self.api_key = api_key if api_key else self.app.config.settings["api_key"][provider]
+
         model_class = get_model_class(provider, name)
-        self.model = model_class(self.app.config.settings["api_key"][provider])
+        self.model = model_class(self.api_key)
         self.model.tools = Tools(self.model.ToolReturn)
 
     def generate_response(self, txt):

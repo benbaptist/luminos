@@ -15,20 +15,16 @@ class Main:
 
         logger.info("Howdy")
 
-    def start(self, permissive: bool, directory: str, model: str, api_key: Optional[str]) -> None: 
-        if model:
+    def start(self, permissive: bool, directory: str, model_str: str, api_key: Optional[str]) -> None: 
+        model = None
+        if model_str:
             try:
-                provider, name = model.split("/")
-
-                self.config.settings["model"]["provider"] = provider
-                self.config.settings["model"]["name"] = name
+                provider, name = model_str.split("/")
+                model = (provider, name)
             except ValueError:
-                raise Exception(f"Invalid provider/model: {model}")
+                raise Exception(f"Invalid provider/model: {model_str}")
 
-        if api_key:
-            self.config.settings["api_key"] = api_key
-
-        self.logic = Logic(self)
+        self.logic = Logic(self, model=model, api_key=api_key)
 
         start_user_interaction(permissive, directory, self.logic)
 
@@ -39,7 +35,7 @@ def main() -> None:
     @click.option('--api-key', '-k', help='API key for model provider') 
     @click.option('--verbose', '-v', is_flag=True, default=False, help='Spit out more information when making requests') 
     @click.argument('directory', required=False, type=click.Path(exists=True, file_okay=False))
-    def cli(permissive: bool, verbose: bool, model: str, api_key: Optional[str], directory: Optional[str] = '.') -> None:
+    def cli(permissive: bool, verbose: bool, model: str, api_key: Optional[str], directory: Optional[str] = '.'):
         LOG_DIRECTORY = os.path.expanduser('~/.config/luminos/logs')
         LOG_FILE = os.path.join(LOG_DIRECTORY, 'luminos.log')
 

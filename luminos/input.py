@@ -32,7 +32,6 @@ style_error = Style.from_dict({
 
 readline.parse_and_bind('tab: complete')
 
-
 # Handle user input and interactions
 
 def get_user_input(style, display_cwd, logic):
