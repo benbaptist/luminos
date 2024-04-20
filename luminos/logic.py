@@ -1,3 +1,5 @@
+from luminos.logger import logger
+
 from luminos.tools import Tools
 from luminos.config import (Config, get_model_class)
 from luminos.system_prompt import SYSTEM_PROMPT
@@ -46,9 +48,13 @@ class Logic:
                 username=getuser()
             )
 
+            logger.debug(f"SYSTEM PROMPT: {self.model.system_prompt}")
+
             response = self.model.generate_response()
 
             if response.finish_reason == "tool_calls":
+                logger.debug("finish_reason == tool_calls")
+
                 if response.content:
                     print(response.content)
                 
@@ -57,11 +63,15 @@ class Logic:
                 for tool_call in tool_calls:
                     call_id = tool_call.id
                     tool_type = tool_call.type
+
+                    logger.debug(f"<call_id={call_id}, tool_type={tool_type}>")
  
                     if tool_type == "function":
                         func = tool_call.content
                         func_name = func.name
                         func_kwargs = json.loads(func.arguments)
+
+                        logger.debug(f"<func={func}, func_name={func_name}, func_kwargs={func_kwargs}>")
 
                         tool_return = self.model.tools.call(func_name, call_id, func_kwargs)
 
