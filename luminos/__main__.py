@@ -7,7 +7,7 @@ from luminos.logger import logger
 
 from luminos.config import Config
 from luminos.logic import Logic
-from luminos.input import start_user_interaction
+from luminos.input import Input
 
 class Main:
     def __init__(self) -> None:
@@ -26,7 +26,8 @@ class Main:
 
         self.logic = Logic(self, model=model, api_key=api_key)
 
-        start_user_interaction(permissive, directory, self.logic)
+        input_handler = Input(permissive=permissive, directory=directory, logic=self.logic)
+        input_handler.start()
 
 def main() -> None:
     @click.command()
