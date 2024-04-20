@@ -1,3 +1,4 @@
+from luminos.logger import logger
 from luminos.messages.base_message import BaseMessage
 from luminos.messages.system import System
 from luminos.messages.user import User
@@ -11,6 +12,7 @@ from .messages.tool_return import ToolReturn
 from .messages.assistant import Assistant
 
 from luminos.exceptions import *
+
 
 from anthropic.types import (
     ContentBlock,
@@ -84,13 +86,15 @@ class BaseAnthropic(BaseModel):
             raise ModelReturnError(f"RateLimitError: {e}")
         except anthropic.BadRequestError as e:
 
-            print("**DEBUGGING***")
-            print("*" * 16)
-            print(self.messages)
-            print("*" * 4)
+            logger.error("**DEBUGGING***")
+            logger.error("*" * 16)
+            logger.error(self.messages)
+            logger.error("*" * 4)
+
             for msg in self.messages:
-                print(f"- <{msg.role}> {msg.serialize()}")
-            print("*" * 16)
+                logger.error(f"- <{msg.role}> {msg.serialize()}")
+                
+            logger.error("*" * 16)
             
             raise ModelReturnError(f"BadRequestError: {e}")
 

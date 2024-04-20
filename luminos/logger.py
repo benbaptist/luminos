@@ -3,6 +3,7 @@ import os
 
 LOG_DIRECTORY = os.path.expanduser('~/.config/luminos/logs')
 LOG_FILE = os.path.join(LOG_DIRECTORY, 'luminos.log')
+os.makedirs(LOG_DIRECTORY, exist_ok=True)
 
 logging.basicConfig(
     filename=LOG_FILE,
