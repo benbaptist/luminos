@@ -8,12 +8,21 @@ from luminos.input import start_user_interaction
 class Main:
     def __init__(self) -> None:
         self.config = Config()
-        self.logic = Logic(self)
 
     def start(self, permissive: bool, directory: str, model: str, api_key: Optional[str]) -> None: 
-        self.config.model = model
+        try:
+            provider, name = model.split("/")
+
+            self.config.settings["model"]["provider"] = provider
+            self.config.settings["model"]["name"] = name
+        except ValueError:
+            raise Exception(f"Invalid provider/model: {model}")
+
         if api_key:
-            self.config.api_key = api_key
+            self.config.settings["api_key"] = api_key
+
+        self.logic = Logic(self)
+
         start_user_interaction(permissive, directory, self.logic)
 
 def main() -> None:
