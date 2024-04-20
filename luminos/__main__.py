@@ -20,12 +20,12 @@ def main() -> None:
     @click.command()
 
     @click.option('--permissive', '-p', is_flag=True, default=False, help='Automatically grant permission for all safe operations.')
-    @click.option('--model', '-m', required=True, help='Model provider and name in format provider/model_name')
+    @click.option('--model', '-m', help='Model provider and name in format provider/model_name')
     @click.option('--api-key', '-k', help='API key for model provider') 
     @click.option('--verbose', '-v', is_flag=True, default=False, help='Spit out more information when making requests') 
 
     @click.argument('directory', required=False, type=click.Path(exists=True, file_okay=False))
-    def cli(permissive: bool, model: str, api_key: Optional[str], directory: Optional[str] = '.') -> None:
+    def cli(permissive: bool, verbose: bool, model: str, api_key: Optional[str], directory: Optional[str] = '.') -> None:
         app = Main()
         app.start(permissive, directory, model, api_key)
 

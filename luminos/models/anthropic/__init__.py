@@ -83,8 +83,15 @@ class BaseAnthropic(BaseModel):
         except anthropic.RateLimitError as e:
             raise ModelReturnError(f"RateLimitError: {e}")
         except anthropic.BadRequestError as e:
-            print(e)
 
+            print("**DEBUGGING***")
+            print("*" * 16)
+            print(self.messages)
+            print("*" * 4)
+            for msg in self.messages:
+                print(f"- <{msg.role}> {msg.serialize()}")
+            print("*" * 16)
+            
             raise ModelReturnError(f"BadRequestError: {e}")
 
         for block in response.content:
