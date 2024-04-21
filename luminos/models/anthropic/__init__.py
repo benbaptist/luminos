@@ -44,7 +44,7 @@ class BaseAnthropic(BaseModel):
 
     provider="anthropic"
 
-    def __init__(self, api_key: str, model="claude-3-sonnet-20240229"):
+    def __init__(self, api_key: str, model="claude-3-opus-20240229"):
         super().__init__()
         
         self.api_key = api_key
@@ -71,8 +71,6 @@ class BaseAnthropic(BaseModel):
 
         asst = self.Assistant("")
         asst.model = self.model
-        
-        self.messages.append(asst)
 
         try:
             response = self.client.beta.tools.messages.create(
@@ -81,7 +79,7 @@ class BaseAnthropic(BaseModel):
                 messages=serialized_messages,
                 system=self.system_prompt,
                 tools=self._tools,
-                temperature=0.5
+                temperature=0.4
             )
 
             logger.debug(response)
@@ -95,18 +93,21 @@ class BaseAnthropic(BaseModel):
             logger.error("*" * 4)
 
             for msg in self.messages:
-                logger.error(f"- {msg.serialize()}")
+                logger.error(f"--- {msg.serialize()}")
                 
             logger.error("*" * 16)
             
             raise ModelReturnError(f"BadRequestError: {e}")
+        
+        # logger.debug("Appending assistant object to messages")
+        self.messages.append(asst)
 
         for block in response.content:
             if type(block) == ToolUseBlock:
                 func = Function(
                     name=block.name,
                     arguments=block.input
-                )
+                ) 
                 
                 tool_call = ToolCall(
                     content=func,
@@ -118,9 +119,16 @@ class BaseAnthropic(BaseModel):
 
                 content = ""
             elif type(block) == TextBlock:
-                asst.content = response.content[0].text
+                if not asst.content:
+                    asst.content = ""
+                    
+                asst.content += response.content[0].text
 
-        if len(asst.content) < 1:
-            self.messages.remove(asst)
+        # if len(asst.content) < 1:
+        #     try:
+        #         logger.debug("Removing stale assistant object from messages")
+        #         self.messages.remove(asst)
+        #     except:
+        #         pass
         
         return asst

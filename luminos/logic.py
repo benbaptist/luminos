@@ -56,7 +56,7 @@ class Logic:
                 username=getuser()
             )
 
-            logger.debug(f"SYSTEM PROMPT: {self.model.system_prompt}")
+            # logger.debug(f"SYSTEM PROMPT: {self.model.system_prompt}")
 
             response = self.model.generate_response()
 

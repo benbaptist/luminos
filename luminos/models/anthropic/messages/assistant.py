@@ -9,8 +9,13 @@ class Assistant(Assistant):
             return "complete"
     
     def serialize(self) -> dict:
+        if not self.content:
+            content = "<blank message>"
+        else:
+            content = self.content
+
         content = [
-            {"type": "text", "text": self.content}
+            {"type": "text", "text": content}
         ]
 
         if len(self.tool_calls) > 0:
