@@ -7,7 +7,7 @@ class FileIO(BaseTool):
 
     def list(self, path):
         """
-        openai.function: List the contents of a directory
+        openai.function: This lists the contents of a directory for a given path. You MUST specify a path, but you can use relative path names; for example, `.` will list the current directory, as seen in the primary system prompt. 
 
         path
 
@@ -32,7 +32,7 @@ class FileIO(BaseTool):
     
     def read(self, path, line_numbers=False):
         """
-        openai.function: Read the contents of a file. If you are unsure of what names exist, use fileio_list.
+        openai.function: Read the contents of a file. If you are unsure of what names exist, use fileio_list. You MUST specify the `path` of the file to read. Output is NOT shown to the user; only you see this! 
 
         path
 
@@ -48,7 +48,7 @@ class FileIO(BaseTool):
         
     def create(self, path):
         """
-        openai.function: Create a new file at the specified path. If you are wanting to write data to the file, you can just use fileio_write directly, and skip this step.
+        openai.function: Create a new, empty file at the specified path. If your intention is to write data to the file, you SHOULD NOT USE THIS and instead, just use fileio_write. 
 
         path
 
@@ -64,7 +64,7 @@ class FileIO(BaseTool):
 
     def write(self, path, content):
         """
-        openai.function: Write content to a file at the specified path. IMPORTANT: You must output the whole file as it should be written, without truncating it.
+        openai.function: Writes content to a file at the specified path. YOU MUST INCLUDE THE `path` and `content` in order for this to work. The `content` MUST be the entire file, as if there's an existing file at this path, the whole file will be overwritten. IMPORTANT: You must output the whole file as it should be written, without truncating it.
 
         path,content
 
@@ -81,7 +81,7 @@ class FileIO(BaseTool):
 
     def append(self, path, content):
         """
-        openai.function: Append content to a file at the specified path.
+        openai.function: Appends content to a file at the specified path. You MUST specify the path, and the content you'd like to append, in order for this function to work.
 
         path,content
 
@@ -174,7 +174,7 @@ class FileIO(BaseTool):
 
     def walk(self, directory):
         """
-        openai.function: Walk the directory tree and return a formatted filesystem tree.
+        openai.function: Walk the directory tree and return a formatted filesystem tree. You must specify the directory to begin walking.
 
         directory
 
@@ -198,7 +198,7 @@ class FileIO(BaseTool):
 
     def readwalk(self, directory):
         """
-        WALKS AND READS through the directories and files starting from 'directory'. Outputs the contents of all text files, excluding binary and hidden files.
+        WALKS AND READS through the directories and files starting from 'directory'. Outputs the contents of all text files, excluding binary and hidden files. You must specify a directory to walk.
 
         directory
 

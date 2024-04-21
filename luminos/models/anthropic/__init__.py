@@ -81,7 +81,7 @@ class BaseAnthropic(BaseModel):
                 messages=serialized_messages,
                 system=self.system_prompt,
                 tools=self._tools,
-                temperatures=0.5
+                temperature=0.5
             )
 
             logger.debug(response)
@@ -119,5 +119,8 @@ class BaseAnthropic(BaseModel):
                 content = ""
             elif type(block) == TextBlock:
                 asst.content = response.content[0].text
+
+        if len(asst.content) < 1:
+            self.messages.remove(asst)
         
         return asst
