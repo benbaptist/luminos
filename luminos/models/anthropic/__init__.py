@@ -80,8 +80,11 @@ class BaseAnthropic(BaseModel):
                 max_tokens=4096,
                 messages=serialized_messages,
                 system=self.system_prompt,
-                tools=self._tools
+                tools=self._tools,
+                temperatures=0.5
             )
+
+            logger.debug(response)
         except anthropic.RateLimitError as e:
             raise ModelReturnError(f"RateLimitError: {e}")
         except anthropic.BadRequestError as e:
