@@ -44,7 +44,7 @@ class BaseAnthropic(BaseModel):
 
     provider="anthropic"
 
-    def __init__(self, api_key: str, model="claude-3-opus-20240229"):
+    def __init__(self, api_key: str, model="claude-3-sonnet-20240229"):
         super().__init__()
         
         self.api_key = api_key
