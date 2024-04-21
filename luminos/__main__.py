@@ -1,3 +1,5 @@
+import pkg_resources
+
 from typing import Optional
 import click
 import logging
@@ -15,7 +17,7 @@ class Main:
 
         logger.info("Howdy")
 
-    def start(self, permissive: bool, directory: str, model_str: str, api_key: Optional[str]) -> None: 
+    def start(self, permissive: bool, directory: str, model_str: str, api_key: Optional[str]) -> None:
         model = None
         if model_str:
             try:
@@ -30,11 +32,18 @@ class Main:
         input_handler.start()
 
 def main() -> None:
+    try:
+        __version__ = pkg_resources.get_distribution("luminos").version
+    except pkg_resources.DistributionNotFound:
+        __version__ = "unknown"
+
+    print(f"Luminos version: {__version__}")
+
     @click.command()
     @click.option('--permissive', '-p', is_flag=True, default=False, help='Automatically grant permission for all safe operations.')
     @click.option('--model', '-m', help='Model provider and name in format provider/model_name')
-    @click.option('--api-key', '-k', help='API key for model provider') 
-    @click.option('--verbose', '-v', is_flag=True, default=False, help='Spit out more information when making requests') 
+    @click.option('--api-key', '-k', help='API key for model provider')
+    @click.option('--verbose', '-v', is_flag=True, default=False, help='Spit out more information when making requests')
     @click.argument('directory', required=False, type=click.Path(exists=True, file_okay=False))
     def cli(permissive: bool, verbose: bool, model: str, api_key: Optional[str], directory: Optional[str] = '.'):
         LOG_DIRECTORY = os.path.expanduser('~/.config/luminos/logs')
