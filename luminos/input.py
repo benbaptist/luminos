@@ -9,13 +9,14 @@ from prompt_toolkit.formatted_text import FormattedText
 
 from luminos.logic import Logic
 from luminos.exceptions import *
-
+from luminos.commands import Commands
 
 class Input:
     def __init__(self, permissive, directory, logic):
         self.permissive = permissive
         self.directory = directory
         self.logic = logic
+        self.commands = Commands(self, logic)
 
         self.bindings = KeyBindings()
         readline.parse_and_bind('tab: complete')
@@ -86,20 +87,30 @@ class Input:
 
                 user_input = self.get_user_input(current_style, display_cwd)
 
-                try:
-                    response = self.logic.generate_response(user_input)
-                except ModelReturnError as e:
-                    error_message = FormattedText([
-                        ('class:error', f'Error: {e}'),
-                    ])
-                    print_formatted_text(error_message, style=self.style_error)
-                    continue
+                if user_input.startswith('/'):
+                    try:
+                        response = self.commands.execute(user_input)
+                        print(response)
+                    except Exception as e:
+                        error_message = FormattedText([
+                            ('class:error', f'Error: {e}'),
+                        ])
+                        print_formatted_text(error_message, style=self.style_error)
+                else:
+                    try:
+                        response = self.logic.generate_response(user_input)
+                    except ModelReturnError as e:
+                        error_message = FormattedText([
+                            ('class:error', f'Error: {e}'),
+                        ])
+                        print_formatted_text(error_message, style=self.style_error)
+                        continue
 
-                if not response:
-                    print("No response generated. This is likely a Luminos error.")
-                    continue
+                    if not response:
+                        print("No response generated. This is likely a Luminos error.")
+                        continue
 
-                print(response.content)
+                    print(response.content)
             except EOFError:
                 print("\\nExiting...")
                 break
