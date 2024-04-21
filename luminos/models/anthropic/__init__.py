@@ -95,7 +95,7 @@ class BaseAnthropic(BaseModel):
             logger.error("*" * 4)
 
             for msg in self.messages:
-                logger.error(f"- <{msg.role}> {msg.serialize()}")
+                logger.error(f"- {msg.serialize()}")
                 
             logger.error("*" * 16)
             
