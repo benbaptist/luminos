@@ -4,6 +4,7 @@ from typing import Optional
 import click
 import logging
 import os
+import sys
 
 from luminos.logger import logger
 
@@ -14,6 +15,9 @@ from luminos.input import Input
 class Main:
     def __init__(self) -> None:
         self.config = Config()
+        if not self.config.settings:
+            print("Config file created at ~/.config/luminos/config.yaml. Please edit it before running Luminos again.")
+            sys.exit(0)
 
         logger.info("Howdy")
 

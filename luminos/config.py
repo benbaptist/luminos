@@ -52,7 +52,7 @@ class Config:
                 yaml.dump(default_full_config, config_file, default_flow_style=False)
 
             print('Default config generated at:', self.config_path)
-            config = default_full_config
+            return None
         else:
             with open(self.config_path, 'r') as config_file:
                 config = yaml.safe_load(config_file)
