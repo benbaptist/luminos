@@ -3,3 +3,4 @@ docstring_parser
 prompt_toolkit
 anthropic
 openai
+click
