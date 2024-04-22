@@ -5,6 +5,8 @@ from luminos.models.openai.gpt35 import GPT35
 from luminos.models.anthropic import BaseAnthropic
 from luminos.models.openai.gpt4 import GPT4
 
+from luminos.exceptions import ModelNotFoundException
+
 def get_model_class(provider, name):
     model_map = {
         "openai": {
@@ -15,6 +17,7 @@ def get_model_class(provider, name):
             "claude3": BaseAnthropic
         }
     }
+    
     try:
         return model_map[provider][name]
     except KeyError:
@@ -36,12 +39,25 @@ class Config:
 
     def load_config(self):
         default_full_config = {
-            'api_key': {
-                'openai': None,
-                'anthropic': None
+            'models': {
+                'openai': {
+                    'api_key': None,
+                    'gpt-3.5-turbo': {
+                        # Model specific settings go here
+                    },
+                    'gpt-4-0125-preview': {
+                        # 'temperature': 0.7
+                    }
+                },
+                'anthropic': {
+                    'api_key': None,
+                    'claude3': {
+                        # Model specific settings
+                    }
+                }
             },
-            'model': {
-                'name': 'gpt-4-0125-preview',
+            'defaults': {
+                'model': 'gpt-4-0125-preview',
                 'provider': "openai"
             }
         }

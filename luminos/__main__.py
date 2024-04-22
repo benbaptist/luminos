@@ -1,55 +1,24 @@
 import pkg_resources
-
 from typing import Optional
 import click
 import logging
 import os
-import sys
 
 from luminos.logger import logger
-
-from luminos.config import Config
+from luminos.config import Config, get_model_class
 from luminos.logic import Logic
 from luminos.input import Input
+from luminos.exceptions import ModelNotFoundException
+import sys
 
 class Main:
     def __init__(self) -> None:
         self.config = Config()
         if not self.config.settings:
             print("Config file created at ~/.config/luminos/config.yaml. Please edit it before running Luminos again.")
-            sys.exit(0)
+            return
 
-        logger.info("Howdy")
-
-    def start(self, permissive: bool, directory: str, model_str: str, api_key: Optional[str]) -> None:
-        model = None
-        if model_str:
-            try:
-                provider, name = model_str.split("/")
-                model = (provider, name)
-            except ValueError:
-                raise Exception(f"Invalid provider/model: {model_str}")
-
-        self.logic = Logic(self, model=model, api_key=api_key)
-
-        input_handler = Input(permissive=permissive, directory=directory, logic=self.logic)
-        input_handler.start()
-
-def main() -> None:
-    try:
-        __version__ = pkg_resources.get_distribution("luminos").version
-    except pkg_resources.DistributionNotFound:
-        __version__ = "unknown"
-
-    print(f"Luminos version: {__version__}")
-
-    @click.command()
-    @click.option('--permissive', '-p', is_flag=True, default=False, help='Automatically grant permission for all safe operations.')
-    @click.option('--model', '-m', help='Model provider and name in format provider/model_name')
-    @click.option('--api-key', '-k', help='API key for model provider')
-    @click.option('--verbose', '-v', is_flag=True, default=False, help='Spit out more information when making requests')
-    @click.argument('directory', required=False, type=click.Path(exists=True, file_okay=False))
-    def cli(permissive: bool, verbose: bool, model: str, api_key: Optional[str], directory: Optional[str] = '.'):
+    def setup_logging(self, verbose: bool) -> None:
         LOG_DIRECTORY = os.path.expanduser('~/.config/luminos/logs')
         LOG_FILE = os.path.join(LOG_DIRECTORY, 'luminos.log')
 
@@ -62,11 +31,35 @@ def main() -> None:
             logger.addHandler(console_handler)
         else:
             logger.setLevel(logging.INFO)
-        
-        app = Main()
-        app.start(permissive, directory, model, api_key)
 
-    cli()
+    def start(self, permissive: bool, directory: str, model_name: Optional[str] = None, provider: Optional[str] = None, api_key: Optional[str] = None) -> None:
+        model_name = model_name or self.config.settings["defaults"].get('model')
+        provider = provider or self.config.settings["defaults"].get('provider')
+        
+        if model_name is None or provider is None:
+            logger.error("Model_name and/or provider is None. Exiting the program.")
+            sys.exit(1)
+        
+        try:
+            model_class = get_model_class(provider, model_name)
+        except ModelNotFoundException as e:
+            logger.error(f"Error getting model class: {e}")
+            return
+
+        self.logic = Logic(self, model_class=model_class, api_key=api_key or self.config.settings.get('api_key'))
+        input_handler = Input(permissive=permissive, directory=directory, logic=self.logic)
+        input_handler.start()
+
+def main() -> None:
+    try:
+        __version__ = pkg_resources.get_distribution("luminos").version
+    except pkg_resources.DistributionNotFound:
+        __version__ = "unknown"
+
+    logger.info(f"Luminos version: {__version__}")
+    app = Main()
+    app.setup_logging(verbose=True)  # Set verbose to True by default
+    app.start(permissive=False, directory='.')
 
 if __name__ == "__main__":
     main()
