@@ -1,8 +1,8 @@
-# Luminos - CLI Utility for Integrating Large Language Models into the Shell
+# Luminos - Large Language Models in the Shell
 
 ## Overview
 
-Luminos is a Command-Line Interface (CLI) utility that facilitates the integration of Large Language Models (LLMs) into the shell environment. By bridging the gap between traditional command-line tools and advanced language models, Luminos offers a unique and powerful way to interact with LLMs directly within the terminal.
+Luminos is a CLI utility that facilitates the integration of Large Language Models (LLMs) into the shell environment. By bridging the gap between traditional command-line tools and advanced language models, Luminos offers a unique and powerful way to interact with LLMs directly within the terminal.
 
 ## Features
 
@@ -11,19 +11,19 @@ Luminos is a Command-Line Interface (CLI) utility that facilitates the integrati
 - **Versatile Task Handling:** Perform a variety of tasks, from file operations to HTTP requests, with the assistance of LLMs.
 
 ## Installation
-To install Luminos from the Git repository, use the following command:
+To install Luminos from the Git repository, use the following commands:
 
 ```
+pip3 install wheel
+pip3 install -r https://raw.githubusercontent.com/benbaptist/luminos/main/requirements.txt
 pip3 install git+https://github.com/benbaptist/luminos
 ```
 
 ## Getting Started
 
-To begin using Luminos, execute the following command in your terminal:
+Once installed, run `luminos` once to create your configuration in `~/.config/luminos`. Edit the configuration to specify your default LLM and, if applicable, API keys. Run `luminos` again to try it out.
 
-```
-luminos
-```
+Luminos currently supports OpenAI and Anthropic, with support for more providers (including Ollama) coming soon. 
 
 For working within a specific directory, provide the path like so:
 
@@ -31,15 +31,15 @@ For working within a specific directory, provide the path like so:
 luminos path_to_dir
 ```
 
-Upon starting Luminos, an interactive shell session is initiated, allowing the LLM to interact with the directory specified. Utilize the LLM's capabilities to manage tasks, ask questions, or perform actions within the shell environment.
+Upon starting Luminos, an interactive session is initiated, allowing the LLM to interact with the directory specified. Utilize the LLM's capabilities to manage tasks, ask questions, or perform actions within the shell environment.
 
 ## Examples
 
 Explore a few examples of how Luminos can enhance your daily tasks:
 
 - **File Management:** Instruct the LLM to rename, move, or modify files based on specific criteria.
+- **Software Development:** Start Luminos within a project's directory, and ask it to make code revisions. Most of Luminos itself was written this way.
 - **Data Analysis:** Leverage the LLM for data analysis, sorting, and summarization tasks.
-- **HTTP Communication:** Conduct HTTP requests through the shell for interaction with online resources.
 - **Terminal Operations:** Get assistance and guidance from the LLM for executing commands and complex operations in the shell.
 
 ## Project Background
