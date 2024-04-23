@@ -72,7 +72,10 @@ class FileIO(BaseTool):
         :param str content: The content to write to the file.
         """
 
-        self.safe(f"Write {len(content)} bytes to file {path}")
+        self.safe(
+            reason=f"Write {len(content)} bytes to file {path}",
+            preview=content
+        )
 
         with open(path, "w") as f:
             f.write(content)
@@ -89,7 +92,7 @@ class FileIO(BaseTool):
         :param str content: The content to append to the file.
         """
 
-        self.safe(f"Append {len(content)} bytes to file {path}")
+        self.safe(f"Append {len(content)} bytes to file {path}", preview=content)
 
         with open(path, "a") as f:
             f.write(content)

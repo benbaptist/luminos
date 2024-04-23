@@ -1,14 +1,19 @@
 from docstring_parser import parse
-import os
+
 from prompt_toolkit import print_formatted_text, prompt
 from prompt_toolkit.formatted_text import FormattedText
 from prompt_toolkit.styles import Style
 from prompt_toolkit.key_binding import KeyBindings
 
+from uuid import uuid4
+
+import os
+
 # Define custom styles for the permission request and key bindings
 style = Style.from_dict({
     'permission': 'bg:ansiyellow ansiwhite bold',
     'action': 'bg:ansiblue ansiwhite bold',
+    'preview': 'bg:ansigreen ansiwhite bold',
     'normal': '' # Default text style
 })
 
@@ -21,6 +26,10 @@ def accept(event):
 @bindings.add('n')
 def decline(event):
     event.app.exit('N')
+
+@bindings.add('p')
+def preview(event):
+    event.app.exit('P')
 
 @bindings.add('c-q')
 def exit_app(event):
@@ -92,20 +101,33 @@ class BaseTool:
 
         return func
 
-    def safe(self, reason):
+    def safe(self, reason, preview=None):
         if os.getenv('ALWAYS_GRANT_PERMISSION', '0') == '1':
             return
+        
         permission_request = FormattedText([
-            ('class:permission', '\n[Permission Request] Permission to perform the following action is requested:\n'),
+            ('class:permission', '\n🛑  Permission Requested!  🛑\n'),
             ('class:action', f'Action: {reason}\n'),
-            ('class:normal', 'Grant permission? (Y/N, Ctrl+Q to quit): ')
+            ('class:preview', 'Preview changes with the editor? (P) ' if preview else ''),
+            ('class:normal', 'Grant permission? (Y/N, P to preview, Ctrl+Q to quit): ')
         ])
         print_formatted_text(permission_request, style=style)
 
         user_input = prompt('', key_bindings=bindings).strip().upper()
         if user_input == 'Y':
-            return
+            return True
         elif user_input == 'N':
             raise PermissionError("Permission denied by the user.")
+        elif user_input == 'P' and preview:
+            path = f"/tmp/{str(uuid4())}"
+
+            with open(path, "w") as f:
+                f.write(preview)
+
+            os.system(f'{os.getenv("EDITOR", "nano")} {path}')
+            
+            os.remove(path)
+
+            return self.safe(reason, preview)  # Re-prompt after preview
         else:
-            self.safe(reason) # Recursive call if any other key is pressed
+            self.safe(reason, preview) # Recursive call if any other key is pressed
