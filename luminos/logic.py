@@ -1,7 +1,6 @@
 from luminos.logger import logger
 
 from luminos.tools import Tools
-from luminos.system_prompt import SYSTEM_PROMPT
 
 from luminos.models.base_model import BaseModel
 from luminos.models.openai.gpt35 import GPT35
@@ -35,7 +34,7 @@ class Logic:
         self.model.add_message(User(txt))
 
         while True:
-            self.model.system_prompt = SYSTEM_PROMPT.format(
+            self.model.system_prompt = self.model.system_prompt_template.format(
                 time=time.strftime("%Y-%m-%d %H:%M:%S"),
                 current_directory=os.getcwd(),
                 listing=str(os.listdir(".")),

@@ -9,6 +9,8 @@ from luminos.messages.tool_call import ToolCall
 from luminos.messages.tool_return import ToolReturn
 from luminos.messages.response import Response
 
+from .system_prompt import SYSTEM_PROMPT
+
 class BaseModel(ABC):
     System = System
     User = User
@@ -16,6 +18,8 @@ class BaseModel(ABC):
     ToolCall = ToolCall
     ToolReturn = ToolReturn
     Response = Response
+
+    system_prompt_template = SYSTEM_PROMPT
 
     provider=None
     model=None
