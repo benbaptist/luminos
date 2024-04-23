@@ -63,7 +63,9 @@ class App:
             model_instance.api_key = api_key
 
         if model_name:
-            model_instance.model = model_name
+            # Only set it if model is None
+            if not model_instance.model:
+                model_instance.model = model_name
 
         # Logic handles processes including model
         self.logic = Logic(self, model=model_instance)

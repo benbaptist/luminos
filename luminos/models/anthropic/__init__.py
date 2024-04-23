@@ -43,7 +43,7 @@ class BaseAnthropic(BaseModel):
     Assistant = Assistant
 
     provider="anthropic"
-    model = "claude-3-sonnet-20240229"
+    model = None
 
     has_tools = True
     has_vision = True

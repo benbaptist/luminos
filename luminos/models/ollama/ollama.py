@@ -11,7 +11,7 @@ from litellm import completion
 
 class Ollama(BaseModel):
     provider = "ollama"
-    model = "llama3:8b"
+    model = None
 
     has_tools = True
     has_vision = True
