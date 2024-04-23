@@ -1,6 +1,7 @@
 requests
 docstring_parser
 litellm
+colorlog
 prompt_toolkit==3.0.43
 anthropic=>0.25.6
 openai=>1.0
