@@ -32,11 +32,11 @@ class Logic:
         self.model.tools = Tools(self.model.ToolReturn)
 
     def generate_response(self, txt):
-        self.model.messages.append(User(txt))
+        self.model.add_message(User(txt))
 
         while True:
             self.model.system_prompt = SYSTEM_PROMPT.format(
-                time=time.strftime("%Y-m-d H:M:S"),
+                time=time.strftime("%Y-%m-%d %H:%M:%S"),
                 current_directory=os.getcwd(),
                 listing=str(os.listdir(".")),
                 username=getuser()
@@ -67,7 +67,7 @@ class Logic:
 
                         tool_return = self.model.tools.call(func_name, call_id, func_kwargs)
 
-                        self.model.messages.append(tool_return)
+                        self.model.add_message(tool_return)
                     else:
                         raise Exception(f"Invalid tool_type {tool_type}")
 

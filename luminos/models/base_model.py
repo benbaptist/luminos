@@ -24,7 +24,7 @@ class BaseModel(ABC):
     has_tools = False
 
     def __init__(self):
-        self.messages = []
+        self._messages = []
         self.system_prompt = ""
 
     def __str__(self):
@@ -34,19 +34,14 @@ class BaseModel(ABC):
     def generate_response(self):
         pass
 
-    def add_message(self, role: str, content: str):
-        {
-            "assistant": Assistant,
-            "system": System,
-            "user": User
-        }
+    def add_message(self, message: BaseMessage):
+        self._messages.append(message)
 
-        Message = _[role]
-        
-        self.messages.append(Message(Content))
-
-    def clear_messages(self):
-        self.messages = []
-
-    def get_messages(self) -> List[Dict[str, str]]:
-        return self.messages
+    @property
+    def messages(self):
+        # Automatically inject system prompt
+        return [System(self.system_prompt)] + self._messages
+    
+    @messages.setter
+    def messages(self, _):
+        self._messages = _

@@ -109,7 +109,7 @@ class BaseAnthropic(BaseModel):
             raise ModelReturnError(f"BadRequestError: {e}")
         
         # logger.debug("Appending assistant object to messages")
-        self.messages.append(asst)
+        self.add_message(asst)
 
         for block in response.content:
             if type(block) == ToolUseBlock:

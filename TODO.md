@@ -1,5 +1,6 @@
 # Short-Term Goals 
-- [ ] Ollama support
+- [x] Ollama support
+- [ ] Custom system prompts for each provider/model
 - [x] Default config file should be minimalistic, config.py should stop populating unpopulated fields
 - [ ] Ctrl+C during generation should interrupt the generation properly, returning you to a prompt
 - [ ] Up/down arrows should give you prompt history

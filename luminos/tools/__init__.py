@@ -5,7 +5,21 @@ from luminos.tools.shell import Shell
 class Tools:
     def __init__(self, ToolReturn):
         self.ToolReturn = ToolReturn
-        self.tools = [Shell, FileIO, HTTP]
+        self._tools = ("Shell", "FileIO", "HTTP")
+        # self._tools = [Shell, FileIO, HTTP]
+
+    @property
+    def tools(self):
+        tools = []
+
+        for tool in self._tools:
+            tools.append(globals[tool])
+
+        return tools
+    
+    @tools.setter
+    def tools(self, tools):
+        self._tools = tools
 
     def call(self, name, call_id, kwargs):
         try:

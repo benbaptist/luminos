@@ -57,8 +57,8 @@ class BaseOpenAI(BaseModel):
             msg = Assistant(content)
             msg.tool_calls = tool_calls
 
-            self.messages.append(msg)
+            self.add_message(msg)
         else:
-            self.messages.append(Assistant(content))
+            self.add_message(Assistant(content))
             
         return Response(content=content, model=self.model, tool_calls=tool_calls, finish_reason=finish_reason)
