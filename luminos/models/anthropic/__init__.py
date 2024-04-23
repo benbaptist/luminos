@@ -58,6 +58,12 @@ class BaseAnthropic(BaseModel):
         self.client = None
 
     @property
+    def messages(self):
+        # Override the injection of a System prompt here; 
+        # it's passed as an argument to .create() and not needed
+        return self._messages
+
+    @property
     def _tools(self):
         tools = []
 

@@ -58,9 +58,12 @@ class App:
             if hasattr(model_instance, attr):
                 setattr(model_instance, attr, value)
 
-        # Set API key if passed as an argument
+        # Set model & API key if passed as an argument
         if api_key:
             model_instance.api_key = api_key
+
+        if model_name:
+            model_instance.model = model_name
 
         # Logic handles processes including model
         self.logic = Logic(self, model=model_instance)

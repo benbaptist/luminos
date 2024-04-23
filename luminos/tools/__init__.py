@@ -13,7 +13,7 @@ class Tools:
         tools = []
 
         for tool in self._tools:
-            tools.append(globals[tool])
+            tools.append(globals()[tool])
 
         return tools
     
