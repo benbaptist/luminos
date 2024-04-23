@@ -5,7 +5,7 @@
 - [ ] Ctrl+C during generation should interrupt the generation properly, returning you to a prompt
 - [ ] Up/down arrows should give you prompt history
 - [ ] All errors should go through logger.error
-- [ ] logger.level should be color-formattated according to the logging level
+- [x] logger.level should be color-formattated according to the logging level
 - [ ] Spinning animation while LLM is generating
 
 # Long-Term Goals
