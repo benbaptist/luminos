@@ -5,7 +5,7 @@ import logging
 import os
 
 from luminos.logger import logger
-from luminos.config import Config, get_model_class
+from luminos.config import Config
 from luminos.logic import Logic
 from luminos.input import Input
 from luminos.exceptions import ModelNotFoundException
@@ -41,7 +41,7 @@ class Main:
             sys.exit(1)
         
         try:
-            model_class = get_model_class(provider, model_name)
+            model_class = self.config.get_model_class(provider, model_name)
         except ModelNotFoundException as e:
             logger.error(f"Error getting model class: {e}")
             return

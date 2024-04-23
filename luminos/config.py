@@ -7,72 +7,120 @@ from luminos.models.openai.gpt4 import GPT4
 
 from luminos.exceptions import ModelNotFoundException
 
-def get_model_class(provider, name):
-    model_map = {
-        "openai": {
-            "gpt-3.5-turbo": GPT35,
-            "gpt-4-0125-preview": GPT4
+class Config:
+    defaults = {
+        'defaults': {
+            'model': 'gpt-4',
+            'provider': "openai",
+            # Additional default configuration options can be added here
         },
-        "anthropic": {
-            "claude3": BaseAnthropic
+        "providers": {
+            "openai": {
+                "api_key": None,
+                "models": {
+                    "gpt-4": {
+                        "temperature": None
+                    }
+                }
+            },
+            "anthropic": {
+                "api_key": None,
+                "models": {}
+            }
         }
     }
-    
-    try:
-        return model_map[provider][name]
-    except KeyError:
-        raise ModelNotFoundException(f"Model '{name}' with provider '{provider}' not found")
-    
-def merge_configs(default, existing):
-    merged = existing.copy()
-    for key, value in default.items():
-        if isinstance(value, dict):
-            merged[key] = merge_configs(value, merged.get(key, {}))
-        else:
-            merged.setdefault(key, value)
-    return merged
 
-class Config:
+    example = """defaults:
+  model: gpt-4
+  provider: openai
+
+# Example configuration for provider and model-specific settings, 
+# such as API keys, temperature, etc.
+
+# providers: 
+#   openai:
+#     api_key: 'sk-thisisasecretkey'
+#     models:
+#       gpt-4:
+#         temperature: 0.75
+#   anthropic:
+#     api_key: 'sk-thisisalsoasecretkeylol'"""
+    
     def __init__(self):
         self.config_path = os.path.expanduser('~/.config/luminos/config.yaml')
         self.settings = self.load_config()
 
-    def load_config(self):
-        default_full_config = {
-            'models': {
-                'openai': {
-                    'api_key': None,
-                    'gpt-3.5-turbo': {
-                        # Model specific settings go here
-                    },
-                    'gpt-4-0125-preview': {
-                        # 'temperature': 0.7
-                    }
-                },
-                'anthropic': {
-                    'api_key': None,
-                    'claude3': {
-                        # Model specific settings
-                    }
-                }
-            },
-            'defaults': {
-                'model': 'gpt-4-0125-preview',
-                'provider': "openai"
-            }
-        }
+    def merge_configs(self, default, existing):
+        merged = existing.copy()
+        for key, value in default.items():
+            if isinstance(value, dict):
+                merged[key] = self.merge_configs(value, merged.get(key, {}))
+            else:
+                merged.setdefault(key, value)
+        return merged
 
+    def load_config(self):
         if not os.path.exists(self.config_path):
             os.makedirs(os.path.dirname(self.config_path), exist_ok=True)
             with open(self.config_path, 'w') as config_file:
-                yaml.dump(default_full_config, config_file, default_flow_style=False)
-
-            print('Default config generated at:', self.config_path)
-            return None
+                config_file.write(self.example)
+                print('Default config generated at:', self.config_path)
+            return self.defaults
         else:
             with open(self.config_path, 'r') as config_file:
                 config = yaml.safe_load(config_file)
+            return self.merge_configs(self.defaults, config)
 
-            config = merge_configs(default_full_config, config)
+    def get(self, key, default=None):
+        # Recursively get a key from settings, fallback to default example_config if not available
+        def get_recursive(key_list, settings, default):
+            if key_list:
+                key = key_list.pop(0)
+                if key in settings:
+                    return get_recursive(key_list, settings[key], default.get(key, None))
+                else:
+                    return default.get(key, None)
+            else:
+                return settings
 
-        return config
+        key_list = key.split('.')
+        return get_recursive(key_list, self.settings, self.defaults)
+
+    def get_model_class(self, provider: str, model_name: str):
+        """
+        Maps a model name and provider to its corresponding class object.
+        
+        Parameters:
+        - provider: The provider of the model (e.g., 'openai', 'anthropic').
+        - model_name: The name of the model (e.g., 'gpt-4').
+        
+        Returns:
+        - The class object corresponding to the model and provider.
+        
+        Throws:
+        - ModelNotFoundException: If the combination of model name and provider
+          does not map to any class.
+        """
+        # Define a nested dictionary mapping providers to models and their respective classes
+        model_map = {
+            'openai': {
+                'gpt-3.5': GPT35,
+                'gpt-4': GPT4,
+            },
+            'anthropic': {
+                'default': BaseAnthropic,  # Assuming a single class for any Anthropics' model
+            },
+            # More providers and models can be added here as needed
+        }
+        
+        if provider not in model_map:
+            raise ModelNotFoundException(f"Provider '{provider}' not found.")
+        
+        # For providers with a single class for all models, use a 'default' key
+        provider_models = model_map[provider]
+        model_class = provider_models.get(model_name, provider_models.get('default'))
+        
+        if model_class is None:
+            raise ModelNotFoundException(f"Model '{model_name}' for provider '{provider}' not found.")
+        
+        return model_class

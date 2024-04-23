@@ -1,7 +1,6 @@
 from luminos.logger import logger
 
 from luminos.tools import Tools
-from luminos.config import (Config, get_model_class)
 from luminos.system_prompt import SYSTEM_PROMPT
 
 from luminos.models.base_model import BaseModel
@@ -29,8 +28,8 @@ from prompt_toolkit.styles import Style
 class Logic:
     def __init__(self, app, model_class, api_key=None):
         self.app = app
-        
-        self.api_key = api_key if api_key else self.app.config.settings["models"][model_class.__module__.split(".")[-2]]["api_key"]
+
+        self.api_key = api_key if api_key else self.app.config.settings["providers"][model_class.__module__.split(".")[-2]]["api_key"]
 
         self.model = model_class(self.api_key)
         self.model.tools = Tools(self.model.ToolReturn)
@@ -45,8 +44,6 @@ class Logic:
                 listing=str(os.listdir(".")),
                 username=getuser()
             )
-
-            # logger.debug(f"SYSTEM PROMPT: {self.model.system_prompt}")
 
             response = self.model.generate_response()
 

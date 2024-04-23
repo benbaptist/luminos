@@ -18,4 +18,5 @@
 - [ ] Better code structure, more organized
 - [ ] Handle token overflows properly
 - [ ] Vision processing for supported models
+- [ ] Two --verbose levels, for better control of debugging
 - [X] Fully implement Anthropic API
