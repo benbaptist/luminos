@@ -15,6 +15,8 @@ import json
 
 class BaseOpenAI(BaseModel):
     provider="openai"
+
+    has_tools = True
     
     def __init__(self, api_key: str, model: str):
         super().__init__()

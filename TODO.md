@@ -1,7 +1,7 @@
 # Short-Term Goals 
-- [ ] Better configuration file, more organized
-- [ ] Default config file should be minimalistic, config.py should stop populating unpopulated fields
-- [ ] Ctrl+C during generation should interrupt the generation properly
+- [ ] Ollama support
+- [x] Default config file should be minimalistic, config.py should stop populating unpopulated fields
+- [ ] Ctrl+C during generation should interrupt the generation properly, returning you to a prompt
 - [ ] Up/down arrows should give you prompt history
 - [ ] All errors should go through logger.error
 - [ ] logger.level should be color-formattated according to the logging level

@@ -44,6 +44,9 @@ class BaseAnthropic(BaseModel):
 
     provider="anthropic"
 
+    has_tools = True
+    has_vision = True
+
     def __init__(self, api_key: str, model="claude-3-sonnet-20240229"):
         super().__init__()
         

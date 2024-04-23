@@ -20,6 +20,9 @@ class BaseModel(ABC):
     provider=None
     model=None
 
+    has_vision = False
+    has_tools = False
+
     def __init__(self):
         self.messages = []
         self.system_prompt = ""
