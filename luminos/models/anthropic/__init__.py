@@ -43,16 +43,19 @@ class BaseAnthropic(BaseModel):
     Assistant = Assistant
 
     provider="anthropic"
+    model = "claude-3-sonnet-20240229"
 
     has_tools = True
     has_vision = True
 
-    def __init__(self, api_key: str, model="claude-3-sonnet-20240229"):
+    api_key = None
+    temperature = 0.5
+    max_tokens = 4096
+
+    def __init__(self):
         super().__init__()
-        
-        self.api_key = api_key
-        self.model = model
-        self.client = anthropic.Anthropic(api_key=self.api_key)
+
+        self.client = None
 
     @property
     def _tools(self):
@@ -70,6 +73,9 @@ class BaseAnthropic(BaseModel):
         return tools
 
     def generate_response(self):
+        if not self.client:
+            self.client = anthropic.Anthropic(api_key=self.api_key)
+
         serialized_messages = [msg.serialize() for msg in self.messages]
 
         asst = self.Assistant("")
@@ -78,11 +84,11 @@ class BaseAnthropic(BaseModel):
         try:
             response = self.client.beta.tools.messages.create(
                 model=self.model,
-                max_tokens=4096,
+                max_tokens=self.max_tokens,
                 messages=serialized_messages,
                 system=self.system_prompt,
                 tools=self._tools,
-                temperature=0.4
+                temperature=self.temperature
             )
 
             logger.debug(response)

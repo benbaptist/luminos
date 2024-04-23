@@ -18,17 +18,18 @@ class BaseOpenAI(BaseModel):
 
     has_tools = True
     
-    def __init__(self, api_key: str, model: str):
+    def __init__(self):
         super().__init__()
 
-        self.api_key = api_key
-        self.model = model
-        self.client = OpenAI(api_key=self.api_key)
+        self.client = None
 
     def __str__(self):
         return self.model
 
     def generate_response(self) -> Response:
+        if not self.client:
+            self.client = OpenAI(api_key=self.api_key)
+            
         serialized_messages = [message.serialize() for message in self.messages]
 
         response = self.client.chat.completions.create(

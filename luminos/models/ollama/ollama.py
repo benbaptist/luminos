@@ -4,27 +4,26 @@ from luminos.exceptions import ModelReturnError
 
 from litellm import completion
 
-class OllamaModel(BaseModel):
+class Ollama(BaseModel):
     provider = "ollama"
+    model = "llama3"
 
     has_tools = True
     has_vision = True
 
     api_base="http://localhost:11434"
 
-    def __init__(self, api_key: str, model: str = "ollama/llama3"):
+    def __init__(self):
         super().__init__()
-        self.api_key = api_key
-        self.model = model
-        # Note: API key might not be used in this API call based on the example given
 
     def generate_response(self, messages):
         try:
             response = completion(
-                model=self.model,
+                model=f"ollama_chat/{self.model}",
                 messages=messages,
                 api_base=self.api_base
             )
+
             logger.debug(response)
             return response
         except Exception as e:

@@ -26,12 +26,9 @@ from prompt_toolkit.formatted_text import FormattedText
 from prompt_toolkit.styles import Style
 
 class Logic:
-    def __init__(self, app, model_class, api_key=None):
+    def __init__(self, app, model):
         self.app = app
-
-        self.api_key = api_key if api_key else self.app.config.settings["providers"][model_class.provider]["api_key"]
-
-        self.model = model_class(self.api_key)
+        self.model = model
         self.model.tools = Tools(self.model.ToolReturn)
 
     def generate_response(self, txt):
@@ -39,7 +36,7 @@ class Logic:
 
         while True:
             self.model.system_prompt = SYSTEM_PROMPT.format(
-                time=time.strftime("%Y-%m-%d %H:%M:%S"),
+                time=time.strftime("%Y-m-d H:M:S"),
                 current_directory=os.getcwd(),
                 listing=str(os.listdir(".")),
                 username=getuser()

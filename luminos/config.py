@@ -4,6 +4,7 @@ import yaml
 from luminos.models.openai.gpt35 import GPT35  
 from luminos.models.anthropic import BaseAnthropic
 from luminos.models.openai.gpt4 import GPT4
+from luminos.models.ollama import Ollama
 
 from luminos.exceptions import ModelNotFoundException
 
@@ -110,7 +111,9 @@ class Config:
             'anthropic': {
                 'default': BaseAnthropic,  # Assuming a single class for any Anthropics' model
             },
-            # More providers and models can be added here as needed
+            "ollama": {
+                "default": Ollama
+            }
         }
         
         if provider not in model_map:

@@ -1,1 +1,1 @@
-from .ollama import OllamaModel
+from .ollama import Ollama

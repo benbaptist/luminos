@@ -47,7 +47,24 @@ class App:
             logger.error(f"Error getting model class: {e}")
             sys.exit(1)
 
-        self.logic = Logic(self, model_class=model_class, api_key=api_key)
+        # Fetch and merge settings
+        provider_settings = self.config.settings.get('providers', {}).get(provider, {})
+        model_settings = provider_settings.get('models', {}).get(model_name, {})
+        effective_settings = {**provider_settings, **model_settings}
 
+        # Instantiate model and dynamically set attributes
+        model_instance = model_class()
+        for attr, value in effective_settings.items():
+            if hasattr(model_instance, attr):
+                setattr(model_instance, attr, value)
+
+        # Set API key if passed as an argument
+        if api_key:
+            model_instance.api_key = api_key
+
+        # Logic handles processes including model
+        self.logic = Logic(self, model=model_instance)
+
+        # Start handling inputs
         input_handler = Input(permissive=permissive, directory=directory, logic=self.logic)
         input_handler.start()
