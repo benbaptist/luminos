@@ -16,24 +16,10 @@ class App:
             print("Config file created at ~/.config/luminos/config.yaml. Please edit it before running Luminos again.")
             sys.exit(0)
 
-    def setup_logging(self, verbose: bool) -> None:
-        LOG_DIRECTORY = os.path.expanduser('~/.config/luminos/logs')
-
-        os.makedirs(LOG_DIRECTORY, exist_ok=True) # Ensure log directory exists
-        LOG_FILE = os.path.join(LOG_DIRECTORY, 'luminos.log')
-
-        file_handler = logging.FileHandler(LOG_FILE)
-        console_handler = logging.StreamHandler()
-        
+    def start(self, permissive: bool, directory: Optional[str], model_name: Optional[str] = None, provider: Optional[str] = None, verbose: Optional[bool] = None, api_key: Optional[str] = None) -> None:
         level = logging.DEBUG if verbose else logging.INFO
         logger.setLevel(level)
-        formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
-        file_handler.setFormatter(formatter)
-        console_handler.setFormatter(formatter)
-        logger.addHandler(file_handler)
-        logger.addHandler(console_handler)
 
-    def start(self, permissive: bool, directory: Optional[str], model_name: Optional[str] = None, provider: Optional[str] = None, api_key: Optional[str] = None) -> None:
         model_name = model_name or self.config.settings.get("defaults", {}).get("model")
         provider = provider or self.config.settings.get("defaults", {}).get("provider")
 

@@ -20,8 +20,7 @@ def main(permissive, model, api_key, verbose, directory):
     provider, model_name = model.split("/") if model else (None, None)
     
     app = App()
-    app.setup_logging(verbose=verbose)
-    app.start(permissive=permissive, directory=directory if directory else '.', model_name=model_name, provider=provider, api_key=api_key)
+    app.start(permissive=permissive, directory=directory if directory else '.', model_name=model_name, provider=provider, verbose=verbose, api_key=api_key)
 
 if __name__ == "__main__":
     main()
