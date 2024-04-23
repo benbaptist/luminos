@@ -1,21 +1,28 @@
-import logging
-import os
-import sys
+from logging import getLogger, StreamHandler, INFO
+from colorlog import ColoredFormatter
 
-LOG_DIRECTORY = os.path.expanduser('~/.config/luminos/logs')
-LOG_FILE = os.path.join(LOG_DIRECTORY, 'luminos.log')
-os.makedirs(LOG_DIRECTORY, exist_ok=True)
+# Create a logger instance
+logger = getLogger(__name__)
 
-logging.basicConfig(
-    filename=LOG_FILE,
-    level=logging.INFO,
-    format='%(asctime)s - %(levelname)s - %(message)s',
-    datefmt='%Y-%m-%d %H:%M:%S',
+# Define color styles for different log levels
+log_colors = {
+    'DEBUG': 'green',
+    'INFO': 'cyan',
+    'WARNING': 'yellow',
+    'ERROR': 'red',
+    'CRITICAL': 'red,bg_white',
+}
+
+# Setup ColoredFormatter with color styles
+color_formatter = ColoredFormatter(
+    "%(log_color)s%(levelname)s: %(message)s",
+    log_colors=log_colors
 )
 
-console = logging.StreamHandler(sys.stderr)
-console.setLevel(logging.DEBUG)
+# Create a stream handler with color formatter
+console = StreamHandler()
+console.setFormatter(color_formatter)
 
-logger = logging.getLogger(__name__)
+# Add the handler to the logger
 logger.addHandler(console)
-logger.setLevel(logging.DEBUG)
+logger.setLevel(INFO)

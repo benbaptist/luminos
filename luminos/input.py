@@ -44,9 +44,9 @@ class Input:
     def handle_sigint(self, signum, frame):
         if self.exit_signal_count == 0:
             self.exit_signal_count += 1
-            print('\\nPress Ctrl+C again to exit...') 
+            print('\nPress Ctrl+C again to exit...') 
         else:
-            print('\\nExiting...')
+            print('\nExiting...')
             exit()
 
     def get_user_input(self, style, display_cwd):
