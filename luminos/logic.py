@@ -29,7 +29,7 @@ class Logic:
     def __init__(self, app, model_class, api_key=None):
         self.app = app
 
-        self.api_key = api_key if api_key else self.app.config.settings["providers"][model_class.__module__.split(".")[-2]]["api_key"]
+        self.api_key = api_key if api_key else self.app.config.settings["providers"][model_class.provider]["api_key"]
 
         self.model = model_class(self.api_key)
         self.model.tools = Tools(self.model.ToolReturn)
