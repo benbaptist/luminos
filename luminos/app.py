@@ -6,7 +6,7 @@ import sys
 from .config import Config
 from .logic import Logic
 from .input import Input
-from .logger import logger
+from .logger import (logger, console)
 from .exceptions import ModelNotFoundException
 
 class App:
@@ -18,6 +18,7 @@ class App:
 
     def start(self, permissive: bool, directory: Optional[str], model_name: Optional[str] = None, provider: Optional[str] = None, verbose: Optional[bool] = None, api_key: Optional[str] = None) -> None:
         level = logging.DEBUG if verbose else logging.INFO
+        console.setLevel(level)
         logger.setLevel(level)
 
         model_name = model_name or self.config.settings.get("defaults", {}).get("model")

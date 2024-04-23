@@ -16,6 +16,7 @@ def main(permissive, model, api_key, verbose, directory):
         __version__ = "unknown"
 
     logger.info(f"Luminos version: {__version__}")
+    
     # Split the model provider and name
     provider, model_name = model.split("/") if model else (None, None)
     
