@@ -55,6 +55,10 @@ class FileIO(BaseTool):
         :param str path: The path of the file to create.
         """
 
+        self.safe(
+            reason=f"Create a blank file {path}"
+        )
+
         self.safe(f"Create blank file {path}")
 
         with open(path, "w") as f:
@@ -106,7 +110,10 @@ class FileIO(BaseTool):
 
         :param str path: The path of the file to delete.
         """
-        import os
+        self.safe(
+            reason=f"Delete {path}"
+        )
+
         try:
             if os.path.isfile(path) or os.path.islink(path):
                 os.remove(path)
@@ -127,6 +134,10 @@ class FileIO(BaseTool):
 
         :param str path: The path of the directory to create.
         """
+
+        self.safe(
+            reason=f"Make a directory at {path}"
+        )
 
         self.safe(f"Create directory {path}")
 
@@ -172,6 +183,7 @@ class FileIO(BaseTool):
 
         :param str path: The path to change the working directory to.
         """
+        
         os.chdir(path)
         return f"Changed working directory to {path}"
 
@@ -183,7 +195,6 @@ class FileIO(BaseTool):
 
         :param str directory: The directory to walk.
         """
-        import os
 
         def tree_structure(start_path, level=0):
             tree_str = ''
