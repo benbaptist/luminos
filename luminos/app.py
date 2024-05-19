@@ -15,6 +15,7 @@ class App:
         self.config = Config()
         if not self.config.settings:
             print("Config file created at ~/.config/luminos/config.yaml. Please edit it before running Luminos again.")
+            
             sys.exit(0)
 
     def start(self, permissive: bool, directory: Optional[str], model_name: Optional[str] = None, provider: Optional[str] = None, verbose: Optional[bool] = None, api_key: Optional[str] = None, preload_prompt: Optional[str] = None) -> None:

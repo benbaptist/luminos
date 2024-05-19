@@ -6,8 +6,8 @@ from luminos.tools.basetool import BaseTool
 class ImageTool(BaseTool):
     name = "ImageTool"
     
-    def __init__(self):
-        self.client = OpenAI()
+    # def __init__(self):
+        # return
 
     def generate_image(self, prompt: str) -> str:
         """
@@ -20,6 +20,9 @@ class ImageTool(BaseTool):
         Returns:
         - str -- The absolute path to the saved image.
         """
+        
+        self.client = OpenAI()
+
         self.safe(f"Generate image with prompt: {prompt}")
         
         try:
