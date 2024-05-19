@@ -1,12 +1,13 @@
 from luminos.tools.fileio import FileIO
 from luminos.tools.http import HTTP
 from luminos.tools.shell import Shell
+from luminos.tools.image import ImageTool
 
 class Tools:
     def __init__(self, ToolReturn):
         self.ToolReturn = ToolReturn
-        self._tools = ("Shell", "FileIO", "HTTP")
-        # self._tools = [Shell, FileIO, HTTP]
+        self._tools = ("Shell", "FileIO", "HTTP", "ImageTool")
+        # self._tools = [Shell, FileIO, HTTP, ImageTool]
 
     @property
     def tools(self):
