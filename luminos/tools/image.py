@@ -1,20 +1,27 @@
 import openai
 import os
 import requests
+from luminos.tools.basetool import BaseTool
 
-class ImageTool:
-    def __init__(self, api_key):
-        openai.api_key = api_key
-
-    @staticmethod
-    def name():
-        return "ImageTool"
-
+class ImageTool(BaseTool):
+    name = "ImageTool"
+    
+    def __init__(self):
+        openai.api_key = os.getenv("OPENAI_API_KEY")
+    
     def generate_image(self, prompt: str) -> str:
         """
         openai.function: generate_image
         Generate an image using OpenAI DALL-E 3 based on the given prompt. Returns the absolute path of the saved image.
+        
+        Arguments:
+        - prompt: str -- The description of the image to generate.
+        
+        Returns:
+        - str -- The absolute path to the saved image.
         """
+        self.safe(f"Generate image with prompt: {prompt}")
+        
         try:
             response = openai.Image.create(
                 prompt=prompt,
@@ -41,7 +48,6 @@ class ImageTool:
 
 # Example usage:
 if __name__ == "__main__":
-    api_key = "your_openai_api_key_here"
     prompt = "A futuristic city skyline at sunset"
-    image_tool = ImageTool(api_key=api_key)
+    image_tool = ImageTool()
     print(image_tool.generate_image(prompt))
