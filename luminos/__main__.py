@@ -4,6 +4,7 @@ from luminos.app import App
 from luminos.logger import logger
 import os
 import yaml
+import getch
 
 @click.command()
 @click.option('--permissive', '-p', is_flag=True, default=False, help='Automatically grant permission for all safe operations.')
@@ -27,8 +28,10 @@ def main(permissive, model, api_key, verbose, directory):
 
     if os.path.exists(rc_file_path):
         while True:
-            user_input = input(f".luminos_rc.yaml detected in {directory or '.'}. Would you like to use it? (yes/no): ").strip().lower()
-            if user_input in ['yes', 'y']:
+            print(f".luminos_rc.yaml detected in {directory or '.'}. Would you like to use it? (y/n): ", end='', flush=True)
+            user_input = getch.getch().lower()
+            print(user_input)  # echo the keypress
+            if user_input in ['y']:
                 with open(rc_file_path, 'r') as file:
                     rc_config = yaml.safe_load(file)
                 preload_prompt = rc_config.get('prompt', '')
@@ -36,10 +39,10 @@ def main(permissive, model, api_key, verbose, directory):
                 model_name = rc_config.get('defaults', {}).get('model', model_name)
                 provider = rc_config.get('defaults', {}).get('provider', provider)
                 break
-            elif user_input in ['no', 'n']:
+            elif user_input in ['n']:
                 break
             else:
-                print("Invalid input. Please enter 'yes' or 'no'.")
+                print("\nInvalid input. Please enter 'y' or 'n'.")
     
     app = App()
 
