@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='luminos',
-    version='0.12.2',
+    version='0.13.0',
     packages=find_packages(),
     install_requires=[
         'requests',
@@ -30,7 +30,7 @@ setup(
         "Intended Audience :: Developers",
         "License :: OSI Approved :: MIT License",
         "Programming Language :: Python :: 3",
-        "Programming Language :: Python :: 3.6"
+        "Programming Language :: Python :: 3.6",
         "Programming Language :: Python :: 3.7",
         "Programming Language :: Python :: 3.8",
         "Programming Language :: Python :: 3.9",
