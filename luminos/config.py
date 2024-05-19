@@ -51,6 +51,8 @@ class Config:
     def __init__(self):
         self.config_path = os.path.expanduser('~/.config/luminos/config.yaml')
         self.settings = self.load_config()
+        self.rc_settings = self.load_rc_config()
+        self.settings = self.merge_configs(self.settings, self.rc_settings)
 
     def merge_configs(self, default, existing):
         merged = existing.copy()
@@ -72,6 +74,13 @@ class Config:
             with open(self.config_path, 'r') as config_file:
                 config = yaml.safe_load(config_file)
             return self.merge_configs(self.defaults, config)
+
+    def load_rc_config(self):
+        rc_file_path = '.luminos_rc.yaml'
+        if os.path.exists(rc_file_path):
+            with open(rc_file_path, 'r') as file:
+                return yaml.safe_load(file)
+        return {}
 
     def get(self, key, default=None):
         # Recursively get a key from settings, fallback to default example_config if not available

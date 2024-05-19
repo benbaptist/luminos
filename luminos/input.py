@@ -2,6 +2,7 @@ import readline
 import os
 import signal
 from getpass import getuser
+from typing import Optional
 from prompt_toolkit import prompt, print_formatted_text
 from prompt_toolkit.styles import Style 
 from prompt_toolkit.key_binding import KeyBindings
@@ -57,7 +58,7 @@ class Input:
 
         return user_input
 
-    def start(self):
+    def start(self, preload_prompt: Optional[str] = None):
         signal.signal(signal.SIGINT, self.handle_sigint)
 
         if self.permissive:
@@ -79,6 +80,12 @@ class Input:
 
         if self.directory:
             os.chdir(self.directory)
+
+        # Inject preload prompt if provided
+        if preload_prompt:
+            response = self.logic.generate_response(preload_prompt)
+            if response:
+                print(response.content)
 
         while True:
             try:

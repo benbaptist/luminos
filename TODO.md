@@ -1,12 +1,11 @@
 # Short-Term Goals 
 - [x] Ollama support
+- [ ] Dalle-3 support
 - [x] Custom system prompts for each provider/model
 - [x] Default config file should be minimalistic, config.py should stop populating unpopulated fields
-- [ ] Ctrl+C during generation should interrupt the generation properly, returning you to a prompt
-- [ ] Up/down arrows should give you prompt history
 - [ ] All errors should go through logger.error
 - [x] logger.level should be color-formattated according to the logging level
-- [ ] Spinning animation while LLM is generating
+- [ ] BUG: Not accepting multi-line inputs, EOFs too soon and submits to AI
 
 # Long-Term Goals
 - [ ] Save sessions in ~/.config/luminos, associate them with current directory, and prompt for recalling previous sessions upon launch. Show a list of old sessions and the option to either recall one or to proceed a fresh session
@@ -21,3 +20,7 @@
 - [ ] Vision processing for supported models
 - [ ] Two --verbose levels, for better control of debugging
 - [x] Fully implement Anthropic API
+- [ ] Better CLI elements
+    - [ ] Spinning animation while LLM is generating
+    - [ ] Ctrl+C during generation should interrupt the generation properly, returning you to a prompt
+    - [ ] Up/down arrows should give you prompt history

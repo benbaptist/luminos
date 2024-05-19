@@ -1,4 +1,5 @@
 from typing import Optional
+import logging
 import os
 import logging
 import sys
@@ -16,7 +17,7 @@ class App:
             print("Config file created at ~/.config/luminos/config.yaml. Please edit it before running Luminos again.")
             sys.exit(0)
 
-    def start(self, permissive: bool, directory: Optional[str], model_name: Optional[str] = None, provider: Optional[str] = None, verbose: Optional[bool] = None, api_key: Optional[str] = None) -> None:
+    def start(self, permissive: bool, directory: Optional[str], model_name: Optional[str] = None, provider: Optional[str] = None, verbose: Optional[bool] = None, api_key: Optional[str] = None, preload_prompt: Optional[str] = None) -> None:
         level = logging.DEBUG if verbose else logging.INFO
         console.setLevel(level)
         logger.setLevel(level)
@@ -57,6 +58,6 @@ class App:
         # Logic handles processes including model
         self.logic = Logic(self, model=model_instance)
 
-        # Start handling inputs
+        # Start handling inputs with optional preload prompt
         input_handler = Input(permissive=permissive, directory=directory, logic=self.logic)
-        input_handler.start()
+        input_handler.start(preload_prompt=preload_prompt)

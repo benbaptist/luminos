@@ -1,0 +1,6 @@
+# Example .luminos_rc.yaml file
+prompt: "Welcome! Feel free to ask me anything."
+autorun: true
+defaults:
+  provider: "openai"
+  model: "gpt-4"
