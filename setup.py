@@ -12,7 +12,8 @@ setup(
         'prompt_toolkit==3.0.43',
         'anthropic>=0.25.6',
         'openai>=1.0',
-        'click>=8.1.7'
+        'click>=8.1.7',
+        'getch'
     ],
     python_requires='>=3.6',
     author='Ben Baptist',
