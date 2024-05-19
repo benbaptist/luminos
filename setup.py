@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='luminos',
-    version='0.13.0',
+    version='0.13.1',
     packages=find_packages(),
     install_requires=[
         'requests',
