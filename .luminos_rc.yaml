@@ -1,6 +1,6 @@
 # Example .luminos_rc.yaml file
 prompt: "Familiarize yourself with this Python project. Read the README, walk the directory, and maybe even read some of the source code. Then, assist me as needed with making improvements and additions to this codebase. Please make sure you keep the style of code consistent, and when implementing code, that you work with existing code properly. Once you're ready, let me know and we can begin making improvements."
-autorun: true
+autorun: false
 defaults:
   provider: "openai"
   model: "gpt-4o"

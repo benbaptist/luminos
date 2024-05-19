@@ -55,10 +55,6 @@ class FileIO(BaseTool):
         :param str path: The path of the file to create.
         """
 
-        self.safe(
-            reason=f"Create a blank file {path}"
-        )
-
         self.safe(f"Create blank file {path}")
 
         with open(path, "w") as f:
@@ -96,7 +92,10 @@ class FileIO(BaseTool):
         :param str content: The content to append to the file.
         """
 
-        self.safe(f"Append {len(content)} bytes to file {path}", preview=content)
+        self.safe(
+            reason=f"Append {len(content)} bytes to file {path}", 
+            preview=content
+        )
 
         with open(path, "a") as f:
             f.write(content)
@@ -110,9 +109,7 @@ class FileIO(BaseTool):
 
         :param str path: The path of the file to delete.
         """
-        self.safe(
-            reason=f"Delete {path}"
-        )
+        self.safe(f"Delete file {path}")
 
         try:
             if os.path.isfile(path) or os.path.islink(path):
@@ -134,10 +131,6 @@ class FileIO(BaseTool):
 
         :param str path: The path of the directory to create.
         """
-
-        self.safe(
-            reason=f"Make a directory at {path}"
-        )
 
         self.safe(f"Create directory {path}")
 
