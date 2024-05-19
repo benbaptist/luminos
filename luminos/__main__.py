@@ -49,7 +49,7 @@ def main(permissive, model, api_key, verbose, directory):
     if preload_prompt and autorun:
         execute_ai_with_prompt(preload_prompt)
 
-    app.start(permissive=permissive, directory=directory if directory else '.', model_name=model_name, provider=provider, verbose=verbose, api_key=api_key, preload_prompt=preload_prompt)
+    app.start(permissive=permissive, directory=directory if directory else '.', model_name=model_name, provider=provider, verbose=verbose, api_key=api_key, preload_prompt=None if autorun else preload_prompt)
 
 def execute_ai_with_prompt(prompt):
     print(f"Executing AI with prompt: {prompt}")
