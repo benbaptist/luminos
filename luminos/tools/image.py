@@ -1,14 +1,14 @@
-import openai
 import os
 import requests
+from openai import OpenAI
 from luminos.tools.basetool import BaseTool
 
 class ImageTool(BaseTool):
     name = "ImageTool"
     
     def __init__(self):
-        openai.api_key = os.getenv("OPENAI_API_KEY")
-    
+        self.client = OpenAI()
+
     def generate_image(self, prompt: str) -> str:
         """
         openai.function: generate_image
@@ -23,12 +23,14 @@ class ImageTool(BaseTool):
         self.safe(f"Generate image with prompt: {prompt}")
         
         try:
-            response = openai.Image.create(
+            response = self.client.images.generate(
+                model="dall-e-3",
                 prompt=prompt,
-                n=1,  # Number of images to generate
-                size="1024x1024"  # Size of the generated image
+                size="1024x1024",
+                quality="standard",
+                n=1,
             )
-            image_url = response['data'][0]['url']
+            image_url = response.data[0].url
             image_data = requests.get(image_url).content
 
             # Ensure the directory exists
