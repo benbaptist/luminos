@@ -50,9 +50,3 @@ class ImageTool(BaseTool):
             return image_path
         except Exception as e:
             raise RuntimeError(f"Failed to generate image: {e}")
-
-# Example usage:
-if __name__ == "__main__":
-    prompt = "A futuristic city skyline at sunset"
-    image_tool = ImageTool()
-    print(image_tool.generate_image(prompt))
