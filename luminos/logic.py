@@ -64,7 +64,12 @@ class Logic:
 
                         logger.debug(f"<func={func}, func_name={func_name}, func_kwargs={func_kwargs}>")
 
-                        tool_return = self.model.tools.call(func_name, call_id, func_kwargs)
+                        tool_return = self.model.tools.call(
+                            name=func_name,
+                            call_id=call_id,
+                            app=self.app,
+                            kwargs=func_kwargs
+                        )
 
                         self.model.add_message(tool_return)
                     else:

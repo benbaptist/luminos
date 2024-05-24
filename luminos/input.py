@@ -119,7 +119,7 @@ class Input:
 
                     print(response.content)
             except EOFError:
-                print("\\nExiting...")
+                print("Exiting...")
                 break
             except KeyboardInterrupt:
                 continue

@@ -22,16 +22,18 @@ class Tools:
     def tools(self, tools):
         self._tools = tools
 
-    def call(self, name, call_id, kwargs):
+    def call(self, name, call_id, app, kwargs):
         try:
             tool_name, function_name = name.split("_")
         except ValueError:
-            raise EOFError(f"Unable to unpack method {name}")
+            raise ValueError(f"Unable to unpack method {name}")
 
         for tool in self.tools:
             if tool.name == tool_name and hasattr(tool, function_name):
                 # Create tool context
                 tool_cxt = tool()
+
+                tool_cxt.app = app
 
                 # Call the function and return the result
                 try:
@@ -61,7 +63,7 @@ class Tools:
                 
                 return tool_return
 
-        raise EOFError(f"Couldn't find the method {name}")
+        raise NotImplementedError(f"Couldn't find the method {name}")
     
     @property
     def __obj__(self):
