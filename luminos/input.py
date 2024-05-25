@@ -11,6 +11,7 @@ from prompt_toolkit.formatted_text import FormattedText
 from luminos.logic import Logic
 from luminos.exceptions import *
 from luminos.commands import Commands
+from luminos.logger import logger
 
 class Input:
     def __init__(self, permissive, directory, logic):
@@ -51,54 +52,53 @@ class Input:
             exit()
 
     def get_user_input(self, style, display_cwd):
-        user_input = ''
+        user_input = ""
 
         while not user_input.strip():
             user_input = prompt(f"[{self.logic.model.model}@{self.logic.model.provider} {display_cwd}]$ ", style=style, key_bindings=self.bindings)
-
+                
         return user_input
 
     def start(self, preload_prompt: Optional[str] = None):
         signal.signal(signal.SIGINT, self.handle_sigint)
+        try:
+            if self.permissive:
+                warning_message = FormattedText([
+                    ('class:warning', 'WARNING: You have enabled "permissive" mode. This provides the LLM with unprompted privileged access, which can pose potential security risks...')
+                ])
+                print_formatted_text(warning_message, style=self.style_warning)
+                user_response = prompt('>', style=self.style_warning)
+                if user_response != 'YES':
+                    print('Operation cancelled. Exiting...')
+                    return
+                os.environ['ALWAYS_GRANT_PERMISSION'] = '1'  
+                current_style = self.style_warning
+            else:
+                os.environ['ALWAYS_GRANT_PERMISSION'] = '0'
+                current_style = self.style_normal
+            
+            if self.directory:
+                os.chdir(self.directory)
 
-        if self.permissive:
-            warning_message = FormattedText([
-                ('class:warning', 'WARNING: You have enabled "permissive" mode. This provides the LLM with unprompted privileged access, which can pose potential security risks. To proceed, type "YES": '),
-            ])
-            print_formatted_text(warning_message, style=self.style_warning)
-            user_response = prompt('>', style=self.style_warning)
+            # Inject preload prompt if provided
+            if preload_prompt:
+                response = self.logic.generate_response(preload_prompt)
+                
+                if response:
+                    print(response.content)
 
-            if user_response != 'YES':
-                print('Operation cancelled. Exiting...')
-                return
-
-            os.environ['ALWAYS_GRANT_PERMISSION'] = '1'  
-            current_style = self.style_warning
-        else:
-            os.environ['ALWAYS_GRANT_PERMISSION'] = '0'
-            current_style = self.style_normal
-
-        if self.directory:
-            os.chdir(self.directory)
-
-        # Inject preload prompt if provided
-        if preload_prompt:
-            response = self.logic.generate_response(preload_prompt)
-            if response:
-                print(response.content)
-
-        while True:
-            try:
+            while True:
                 cwd = os.getcwd()
                 display_cwd = '...' + cwd[-17:] if len(cwd) > 20 else cwd
-
                 user_input = self.get_user_input(current_style, display_cwd)
 
+                # Handling commands and user inputs separately
                 if user_input.startswith('/'):
                     try:
                         response = self.commands.execute(user_input)
                         print(response)
                     except Exception as e:
+                        logger.error(f"Command execution error: {e}")
                         error_message = FormattedText([
                             ('class:error', f'Error: {e}'),
                         ])
@@ -107,19 +107,23 @@ class Input:
                     try:
                         response = self.logic.generate_response(user_input)
                     except ModelReturnError as e:
+                        logger.error(f"Model return error: {e}")
                         error_message = FormattedText([
                             ('class:error', f'Error: {e}'),
                         ])
                         print_formatted_text(error_message, style=self.style_error)
                         continue
-
                     if not response:
+                        logger.error("No response generated. Possible Luminos error.")
                         print("No response generated. This is likely a Luminos error.")
                         continue
 
                     print(response.content)
-            except EOFError:
-                print("Exiting...")
-                break
-            except KeyboardInterrupt:
-                continue
+        except EOFError:
+            logger.error("EOFError raised, exiting the program.")
+            print("Exiting...")
+        except KeyboardInterrupt:
+            pass
+        except Exception as e:
+            logger.error(f"Unexpected error: {e}")
+            pass

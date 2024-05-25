@@ -22,14 +22,19 @@ class Commands:
         command_name = parts[0]
         args = parts[1:]
 
-        if command_name == 'help':  # Handle /help command separately
-            return self.help()
+        try:
+            if command_name == 'help':  # Handle /help command separately
+                return self.help()
 
-        if command_name in self.commands:
-            command = self.commands[command_name]
-            return command.run(*args)
-        else:
-            return f"Unknown command: {command_name}"
+            if command_name in self.commands:
+                command = self.commands[command_name]
+                return command.run(*args)
+            else:
+                return f"Unknown command: {command_name}"
+        except Exception as e:
+            logger.error(f"Exception in command '{command_name}': {e}")
+            return f"Error executing command: {str(e)}"
+
 
     def help(self):
         help_text = 'Available commands:\n'
