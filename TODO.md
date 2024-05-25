@@ -1,9 +1,9 @@
 # Version Goals
 
 ## 0.14.2
-- [ ] All errors should go through logger.error
+- [x] All errors should go through logger.error
 - [ ] BUG FIX: Not accepting multi-line inputs at prompt, EOFs too soon and submits to AI
-- [ ] BUG FIX: EOFError for input.py prompt needs to be try/caught separately from everything else - if EOFError is raised anywhere deeper in the AI logic pipeline, it thinks the user simply hit Ctrl+D and 'exits' the whole program. i.e. the scope of the try/except needs to be narrower.t
+- [x] BUG FIX: EOFError for input.py prompt needs to be try/caught separately from everything else - if EOFError is raised anywhere deeper in the AI logic pipeline, it thinks the user simply hit Ctrl+D and 'exits' the whole program. i.e. the scope of the try/except needs to be narrower.t
 
 ## 0.15
 - [ ] Save sessions in ~/.config/luminos, associate them with current directory (absolute path), and prompt for recalling previous sessions upon launch. Show a list of old sessions and the option to either recall one or to proceed a fresh session
