@@ -107,15 +107,16 @@ class Input:
                     try:
                         response = self.logic.generate_response(user_input)
                     except ModelReturnError as e:
-                        logger.error(f"Model return error: {e}")
+                        logger.traceback(f"Model return error: {e}")
                         error_message = FormattedText([
                             ('class:error', f'Error: {e}'),
                         ])
                         print_formatted_text(error_message, style=self.style_error)
+                        
                         continue
                     if not response:
                         logger.error("No response generated. Possible Luminos error.")
-                        print("No response generated. This is likely a Luminos error.")
+
                         continue
 
                     print(response.content)
@@ -125,5 +126,5 @@ class Input:
         except KeyboardInterrupt:
             pass
         except Exception as e:
-            logger.error(f"Unexpected error: {e}")
+            logger.traceback(f"Unexpected error: {e}")
             pass
