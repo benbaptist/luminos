@@ -3,6 +3,7 @@ import logging
 import os
 import logging
 import sys
+import getch
 
 from .config import Config
 from .logic import Logic
@@ -22,6 +23,22 @@ class App:
         level = logging.DEBUG if verbose else logging.INFO
         console.setLevel(level)
         logger.setLevel(level)
+
+        # Check for rc file
+        rc_file_path = os.path.join(directory if directory else '.', '.luminos_rc.yaml')
+
+        if os.path.exists(rc_file_path):
+            while True:
+                print(f".luminos_rc.yaml detected in {directory or '.'}. Would you like to use it? (y/n): ", end='', flush=True)
+                user_input = getch.getch().lower()
+                print(user_input)  # echo the keypress
+                if user_input in ['y']:
+                    self.config.load_rc_config()
+                    break
+                elif user_input in ['n']:
+                    break
+                else:
+                    print("\nInvalid input. Please enter 'y' or 'n'.")
 
         model_name = model_name or self.config.settings.get("defaults", {}).get("model")
         provider = provider or self.config.settings.get("defaults", {}).get("provider")
