@@ -4,13 +4,20 @@ import json
 import re
 from html.parser import HTMLParser
 
-from .messages.tool_call import ToolCall
-
 markdowner = Markdown()
 
-class Function(object):
-    name = None
-    arguments = None
+tool_call = """I'll go ahead and retrieve that website for you.
+
+```tool_call
+{"function": "http", "args": {"method": "GET", "url": "https://example.com/"}}
+```
+
+```tool_call
+{"function": "http", "args": {"method": "GET", "url": "https://example.com/"}}
+```
+"""
+
+m = markdowner.convert(tool_call)
 
 class CodeBlockParser(HTMLParser):
     def __init__(self):
@@ -46,34 +53,4 @@ def parse_html(html_content):
     parser.feed(html_content)
     return parser.code_blocks
 
-def tool_parser(msg):
-    tool_calls = []
-
-    m = markdowner.convert(msg)
-
-    # Now you can iterate over the child elements (or attributes) of the root:
-    for tool in parse_html(m):
-        func = Function()
-        func.name = tool["name"]
-        func.arguments = tool["args"]
-
-        use_id = tool["use_id"]
-
-        tool_call = ToolCall(func, "function", use_id)
-
-        tool_calls.append(tool_call)
-
-    return tool_calls
-
-if __name__ == "__main__":
-    tool_call = """I'll go ahead and retrieve that website for you.
-
-```tool_call
-{"name": "http", "args": {"method": "GET", "url": "https://example.com/"}}
-```
-
-```tool_call
-{"name": "http", "args": {"method": "GET", "url": "https://example.com/"}}
-```
-"""
-    print(tool_parser(tool_call))
+print(parse_html(m))
