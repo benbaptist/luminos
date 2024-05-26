@@ -20,7 +20,7 @@ def main(permissive, model, api_key, verbose, directory):
     
     logger.info(f"Luminos version: {__version__}")
 
-    provider, model_name = model.split("/") if model else (None, None)
+    provider, model_name = model.split("/", 1) if model else (None, None)
     
     rc_file_path = os.path.join(directory if directory else '.', '.luminos_rc.yaml')
     preload_prompt = None

@@ -28,6 +28,7 @@ class CodeBlockParser(HTMLParser):
         if tag == 'code':
             self.in_code_block = False
             code_block = ''.join(self.current_code_block)
+
             if code_block.startswith('tool_call'):
                 try:
                     json_data = '\n'.join(code_block.split('\n')[1:])
@@ -66,14 +67,18 @@ def tool_parser(msg):
     return tool_calls
 
 if __name__ == "__main__":
-    tool_call = """I'll go ahead and retrieve that website for you.
+    example_call = """I'll go ahead and retrieve that website for you.
 
 ```tool_call
-{"name": "http", "args": {"method": "GET", "url": "https://example.com/"}}
+{"name": "http", "args": {"method": "GET", "url": "https://example.com/"}, "use_id": 1}
 ```
 
 ```tool_call
-{"name": "http", "args": {"method": "GET", "url": "https://example.com/"}}
+{"name": "http", "args": {"method": "GET", "url": "https://example.com/"}, "use_id": 2}
 ```
 """
-    print(tool_parser(tool_call))
+
+    tool_calls = tool_parser(example_call)
+
+    for func in tool_calls:
+        print(func.name, func.arguments)
