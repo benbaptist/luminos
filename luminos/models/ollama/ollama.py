@@ -8,7 +8,6 @@ from luminos.messages.tool_return import ToolReturn
 from luminos.messages.response import Response
 
 from .system_prompt import SYSTEM_PROMPT
-from .tool_parser import tool_parser
 
 from litellm import completion
 
@@ -26,26 +25,23 @@ class Ollama(BaseModel):
     def __init__(self):
         super().__init__()
 
-    @property
-    def system_prompt_template(self):
-        tool_prompt = ""
+    # @property
+    # def system_prompt_template(self):
+    #     tool_prompt = ""
 
-        for tool in self.tools.__obj__:
-            name = tool["function"]["name"]
-            description = tool["function"]["description"]
-            parameters = json.dumps(tool["function"]["parameters"])
+    #     for tool in self.tools.__obj__:
+    #         name = tool["function"]["name"]
+    #         description = tool["function"]["description"]
+    #         parameters = json.dumps(tool["function"]["parameters"])
 
-            tool_prompt += f"**{name}**{description}\nJSON Schema: {parameters}\n"
+    #         tool_prompt += f"**{name}**{description}\nJSON Schema: {parameters}\n"
 
-        tool_prompt = tool_prompt.replace("{", "{{")
-        tool_prompt = tool_prompt.replace("}", "}}")
+    #     tool_prompt = tool_prompt.replace("{", "{{")
+    #     tool_prompt = tool_prompt.replace("}", "}}")
 
-        return SYSTEM_PROMPT + "\n\n" + tool_prompt
+    #     return SYSTEM_PROMPT + "\n\n" + tool_prompt
 
     def generate_response(self):
-        # Limit to the most basic tools, for now
-        self.tools.tools = ("Shell", "FileIO")
-
         serialized_messages = [message.serialize() for message in self.messages]
 
         try:
@@ -53,6 +49,7 @@ class Ollama(BaseModel):
                 model=f"ollama_chat/{self.model}",
                 messages=serialized_messages,
                 api_base=self.api_base,
+                tools=self.tools.__obj__
             )
 
             logger.debug(response)
@@ -65,18 +62,23 @@ class Ollama(BaseModel):
         content = choice.message["content"]
         finish_reason = choice.finish_reason
 
-        # Parse tool calls from the response
-        try:
-            tool_calls = tool_parser(content)
-        except Exception as e:
-            logger.error(f"Error while parsing for potential tool calls {e}")
-            logger.debug(content)
-            raise ModelReturnError(f"Error while parsing for potential tool calls: {e}")
+        # # Parse tool calls from the response
+        # try:
+        #     tool_calls = tool_parser(content)
+        # except Exception as e:
+        #     logger.error(f"Error while parsing for potential tool calls {e}")
+        #     logger.debug(content)
+        #     raise ModelReturnError(f"Error while parsing for potential tool calls: {e}")
 
-        print(tool_calls)
+        tool_calls = []
 
-        if len(tool_calls) > 0:
-            finish_reason = "tool_calls"
+        if finish_reason == "tool_calls":
+            tool_calls_data = response.choices[0].message.tool_calls
+
+            tool_calls = [
+                ToolCall(content=data.function, id=data.id, type=data.type) for data in tool_calls_data
+            ]
+
             msg = Assistant(content)
             msg.tool_calls = tool_calls
 

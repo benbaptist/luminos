@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='luminos',
-    version='0.14.5',
+    version='0.14.7',
     packages=find_packages(),
     install_requires=[
         'requests',
@@ -13,7 +13,8 @@ setup(
         'anthropic>=0.25.6',
         'openai>=1.0',
         'click>=8.1.7',
-        'getch'
+        'getch',
+        'markdown2'
     ],
     python_requires='>=3.6',
     author='Ben Baptist',

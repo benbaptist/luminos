@@ -13,6 +13,7 @@ from .messages.assistant import Assistant
 
 from luminos.exceptions import *
 
+from .system_prompt import SYSTEM_PROMPT
 
 from anthropic.types import (
     ContentBlock,
@@ -30,9 +31,6 @@ from anthropic.types import (
     TextBlock,
     TextBlockParam,
     TextDelta,
-)
-
-from anthropic.types.beta.tools import (
     ToolUseBlock
 )
 
@@ -51,6 +49,8 @@ class BaseAnthropic(BaseModel):
     api_key = None
     temperature = 0.5
     max_tokens = 4096
+
+    system_prompt_template = SYSTEM_PROMPT
 
     def __init__(self):
         super().__init__()
@@ -88,7 +88,7 @@ class BaseAnthropic(BaseModel):
         asst.model = self.model
 
         try:
-            response = self.client.beta.tools.messages.create(
+            response = self.client.messages.create(
                 model=self.model,
                 max_tokens=self.max_tokens,
                 messages=serialized_messages,
