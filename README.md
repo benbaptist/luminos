@@ -2,20 +2,38 @@
 
 ## Overview
 
-Luminos is a CLI utility that facilitates the integration of Large Language Models (LLMs) into the shell environment. By bridging the gap between traditional command-line tools and advanced language models, Luminos offers a unique and powerful way to interact with LLMs directly within the terminal.
+Luminos is a command line utility that integrates Large Language Models (LLMs) into your local shell environment. It provides system access through a variety of tools to an LLM of choice, allowing you to perform various tasks with natural language. 
+
+This program provides the LLM with tools enabling full system access, network access, and shell access. Any potentially dangerous tools, such as writing files or shell access, is behind a permission prompt for the user.
 
 ## Features
 
-- **Direct Filesystem Access:** Luminos provides LLMs with direct access to the filesystem, enabling tasks such as file manipulation and data processing.
-- **Interactive Shell Integration:** Seamlessly integrate LLM capabilities into the command-line interface for an interactive experience.
-- **Versatile Task Handling:** Perform a variety of tasks, from file operations to HTTP requests, with the assistance of LLMs.
+- **Natural Language Interface**: Perform various tasks using natural language commands
+- **LLM Integration**: Compatible with multiple Large Language Models
+- **System Access**: Provides LLMs tools for:
+  - Full filesystem access
+  - Network access
+  - Shell access
+- **Safety Measures**:
+  - Permission prompts for potentially dangerous actions
+  - Detailed previews of actions before execution
+- **Versatile Tool Integration**: Enhances LLM capabilities with various system tools
+
+## Example Uses
+
+- **File Management**: "Find all PDF files created last month and move them to a new folder."
+- **Data Analysis**: "Analyze the CSV file in my Downloads folder and generate a summary report."
+- **System Maintenance**: "Check for and install system updates, then reboot if necessary."
+- **Code Assistance**: "Find all TODO comments in my Python project and create a task list."
+- **Network Diagnostics**: "Run a network speed test and log the results."
+- **Text Processing**: "Extract all email addresses from the given text file and save them to a new file."
+- **Automation**: "Create a bash script that backs up my Documents folder daily."
 
 ## Installation
 To install Luminos from the Git repository, use the following commands:
 
 ```
 pip3 install wheel
-pip3 install -r https://raw.githubusercontent.com/benbaptist/luminos/main/requirements.txt
 pip3 install git+https://github.com/benbaptist/luminos
 ```
 
