@@ -10,7 +10,7 @@ setup(
         'litellm',
         'colorlog',
         'prompt_toolkit==3.0.43',
-        'anthropic>=0.25.6',
+        'anthropic>=0.29.0',
         'openai>=1.0',
         'click>=8.1.7',
         'getch',
