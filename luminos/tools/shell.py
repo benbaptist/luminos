@@ -12,7 +12,7 @@ class Shell(BaseTool):
         command,timeout
 
         :param str command: The command to execute.
-        :param int timeout: Time in seconds to wait for command to execute, default is 60.
+        :param int timeout: Time in seconds to wait for command to execute, default is 60. Set to -1 to wait until completion.
         """
         if '&&' in command:
             raise Exception('Cannot use `&&` in shell call')
@@ -27,6 +27,9 @@ class Shell(BaseTool):
             process = subprocess.Popen(args, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 
             # Use communicate to handle input/output and enforce the timeout
+            if timeout == -1:
+                timeout = None
+
             stdout, stderr = process.communicate(timeout=timeout)
 
             result = {
