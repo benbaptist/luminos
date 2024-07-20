@@ -1,6 +1,6 @@
 # Version Goals
 
-## 0.14.8
+## 0.14.9
 - Model 'gpt-3.5-turbo' for provider 'openai' not found
 - Catch and handle Anthropic anthropic.InternalServerError cleanly, raise appropriate luminos-specific ModelReturnError
 

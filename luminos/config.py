@@ -5,6 +5,7 @@ from luminos.models.openai.gpt35 import GPT35
 from luminos.models.anthropic import BaseAnthropic
 from luminos.models.openai.gpt4 import GPT4
 from luminos.models.openai.gpt4o import GPT4o
+from luminos.models.openai.gpt4omini import GPT4oMini
 from luminos.models.ollama import Ollama
 
 from luminos.exceptions import ModelNotFoundException
@@ -117,6 +118,7 @@ class Config:
                 'gpt-3.5': GPT35,
                 'gpt-4': GPT4,
                 'gpt-4o': GPT4o,
+                'gpt-4o-mini': GPT4oMini
             },
             'anthropic': {
                 'default': BaseAnthropic,  # Assuming a single class for any Anthropics' model
