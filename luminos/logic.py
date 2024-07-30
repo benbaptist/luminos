@@ -47,7 +47,7 @@ class Logic:
                 logger.debug("finish_reason == tool_calls")
 
                 if response.content:
-                    print(response.content)
+                    print(f"<{self.model}> {response.content}")
                 
                 tool_calls = response.tool_calls
  

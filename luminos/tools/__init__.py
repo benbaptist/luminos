@@ -7,7 +7,6 @@ class Tools:
     def __init__(self, ToolReturn):
         self.ToolReturn = ToolReturn
         self._tools = ("Shell", "FileIO", "HTTP", "ImageTool")
-        # self._tools = [Shell, FileIO, HTTP, ImageTool]
 
     @property
     def tools(self):

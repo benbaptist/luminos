@@ -46,29 +46,47 @@ class Ollama(BaseModel):
 
         try:
             response = completion(
-                model=f"ollama_chat/{self.model}",
+                model=f"ollama/{self.model}",
                 messages=serialized_messages,
                 api_base=self.api_base,
-                tools=self.tools.__obj__
+                #tools=self.tools.__obj__,
+                stream=True
             )
 
-            logger.debug(response)
+            content = ""
+            choice = {}
+
+            print(f"<{self.model}> ", end="")
+
+            for chunk in response:
+                _choice = chunk['choices'][0]
+                delta = _choice['delta']
+
+                print(delta.content, end="", flush=True)
+                
+                if delta.content != None:
+                    content += delta.content
+                
+                for key in _choice:
+                    if type(key) != str:
+                        continue
+
+                    choice[key] = _choice[key]
+                
+            print(choice)
         except Exception as e:
             logger.error(f"Error while making request to Ollama: {e}")
             raise ModelReturnError(f"Error making request to Ollama: {e}")
         
-        choice = response.choices[0]
-        
-        content = choice.message["content"]
-        finish_reason = choice.finish_reason
+        finish_reason = choice["finish_reason"]
 
-        # # Parse tool calls from the response
-        # try:
-        #     tool_calls = tool_parser(content)
-        # except Exception as e:
-        #     logger.error(f"Error while parsing for potential tool calls {e}")
-        #     logger.debug(content)
-        #     raise ModelReturnError(f"Error while parsing for potential tool calls: {e}")
+        # Parse tool calls from the response
+        try:
+            tool_calls = tool_parser(content)
+        except Exception as e:
+            logger.error(f"Error while parsing for potential tool calls {e}")
+            logger.debug(content)
+            raise ModelReturnError(f"Error while parsing for potential tool calls: {e}")
 
         tool_calls = []
 
