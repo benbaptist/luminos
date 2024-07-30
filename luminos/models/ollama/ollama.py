@@ -22,26 +22,12 @@ class Ollama(BaseModel):
 
     api_base="http://localhost:11434"
 
+    system_prompt_template = SYSTEM_PROMPT
+
     def __init__(self):
         super().__init__()
 
-    # @property
-    # def system_prompt_template(self):
-    #     tool_prompt = ""
-
-    #     for tool in self.tools.__obj__:
-    #         name = tool["function"]["name"]
-    #         description = tool["function"]["description"]
-    #         parameters = json.dumps(tool["function"]["parameters"])
-
-    #         tool_prompt += f"**{name}**{description}\nJSON Schema: {parameters}\n"
-
-    #     tool_prompt = tool_prompt.replace("{", "{{")
-    #     tool_prompt = tool_prompt.replace("}", "}}")
-
-    #     return SYSTEM_PROMPT + "\n\n" + tool_prompt
-
-    def generate_response(self):
+    def generate_response(self, stream=False):
         serialized_messages = [message.serialize() for message in self.messages]
 
         try:
@@ -49,48 +35,59 @@ class Ollama(BaseModel):
                 model=f"ollama/{self.model}",
                 messages=serialized_messages,
                 api_base=self.api_base,
-                #tools=self.tools.__obj__,
-                stream=True
+                tools=self.tools.__obj__,
+                stream=stream
             )
 
-            content = ""
-            choice = {}
+            if stream:
+                content = ""
+                choice = {}
 
-            print(f"<{self.model}> ", end="")
+                print(f"<{self.model}> ", end="")
 
-            for chunk in response:
-                _choice = chunk['choices'][0]
-                delta = _choice['delta']
+                for chunk in response:
+                    _choice = chunk['choices'][0]
+                    delta = _choice['delta']
 
-                print(delta.content, end="", flush=True)
+                    print(delta.content, end="", flush=True)
+                    
+                    if delta.content != None:
+                        content += delta.content
+                    
+                    for key in _choice:
+                        if type(key) != str:
+                            continue
+
+                        choice[key] = _choice[key]
+                    
+                print()
+            else:
+                choice = response["choices"][0]
+                print(choice)
+                content = choice.message.content
+
+                print(f"<{self.model}> {content}")
                 
-                if delta.content != None:
-                    content += delta.content
-                
-                for key in _choice:
-                    if type(key) != str:
-                        continue
-
-                    choice[key] = _choice[key]
-                
-            print(choice)
         except Exception as e:
             logger.error(f"Error while making request to Ollama: {e}")
             raise ModelReturnError(f"Error making request to Ollama: {e}")
         
-        finish_reason = choice["finish_reason"]
+        # finish_reason = choice["finish_reason"]
 
         # Parse tool calls from the response
-        try:
-            tool_calls = tool_parser(content)
-        except Exception as e:
-            logger.error(f"Error while parsing for potential tool calls {e}")
-            logger.debug(content)
-            raise ModelReturnError(f"Error while parsing for potential tool calls: {e}")
+        # try:
+        #     tool_calls = tool_parser(content)
+        # except Exception as e:
+        #     logger.error(f"Error while parsing for potential tool calls {e}")
+        #     logger.debug(content)
+        #     raise ModelReturnError(f"Error while parsing for potential tool calls: {e}")
+
+        if "tool_calls" in choice:
+            print(choice["tool_calls"])
 
         tool_calls = []
 
-        if finish_reason == "tool_calls":
+        if len(tool_calls) > 0:
             tool_calls_data = response.choices[0].message.tool_calls
 
             tool_calls = [
@@ -104,4 +101,4 @@ class Ollama(BaseModel):
         else:
             self.add_message(Assistant(content))
             
-        return Response(content=content, model=self.model, tool_calls=tool_calls, finish_reason=finish_reason)
+        return Response(content=content, model=self.model, tool_calls=tool_calls)

@@ -41,12 +41,14 @@ class Logic:
                 username=getuser()
             )
 
-            response = self.model.generate_response()
+            stream = self.app.config.get("global").get("stream")
+
+            response = self.model.generate_response(stream)
 
             if response.finish_reason == "tool_calls":
                 logger.debug("finish_reason == tool_calls")
-
-                if response.content:
+                
+                if response.content and not self.app.config["global"]["streaming"]:
                     print(f"<{self.model}> {response.content}")
                 
                 tool_calls = response.tool_calls

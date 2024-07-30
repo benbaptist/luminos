@@ -83,14 +83,18 @@ class Input:
             # Inject preload prompt if provided
             if preload_prompt:
                 response = self.logic.generate_response(preload_prompt)
+
+                streaming = self.app.config["global"]["stream"].get("global").get("stream")
                 
-                if response:
+                if response and not streaming:
                     print(response.content)
 
             while True:
                 cwd = os.getcwd()
                 display_cwd = '...' + cwd[-17:] if len(cwd) > 20 else cwd
                 user_input = self.get_user_input(current_style, display_cwd)
+
+                stream = self.logic.app.config.get("global").get("stream")
 
                 # Handling commands and user inputs separately
                 if user_input.startswith('/'):
@@ -114,12 +118,14 @@ class Input:
                         print_formatted_text(error_message, style=self.style_error)
                         
                         continue
-                    if not response:
-                        logger.error("No response generated. Possible Luminos error.")
 
-                        continue
+                    if not stream:
+                        if not response:
+                            logger.error("No response generated. Possible Luminos error.")
 
-                    print(response.content)
+                            continue
+
+                        print(response.content)
         except EOFError:
             logger.error("EOFError raised, exiting the program.")
             print("Exiting...")

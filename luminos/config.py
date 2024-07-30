@@ -12,10 +12,12 @@ from luminos.exceptions import ModelNotFoundException
 
 class Config:
     defaults = {
+        "global": {
+            "stream": True
+        },
         'defaults': {
             'model': 'gpt-4',
             'provider': "openai",
-            # Additional default configuration options can be added here
         },
         "providers": {
             "openai": {
@@ -33,7 +35,10 @@ class Config:
         }
     }
 
-    example = """defaults:
+    example = """global:
+  streaming: False # to use streaming or not
+        
+defaults:
   model: gpt-4
   provider: openai
 
