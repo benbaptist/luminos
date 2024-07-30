@@ -35,7 +35,7 @@ class BaseModel(ABC):
         return None
 
     @abstractmethod
-    def generate_response(self):
+    def generate_response(self, stream=False):
         pass
 
     def add_message(self, message: BaseMessage):

@@ -78,7 +78,7 @@ class BaseAnthropic(BaseModel):
 
         return tools
 
-    def generate_response(self):
+    def generate_response(self, stream=False):
         if not self.client:
             self.client = anthropic.Anthropic(api_key=self.api_key)
 

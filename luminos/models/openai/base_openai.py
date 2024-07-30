@@ -28,7 +28,7 @@ class BaseOpenAI(BaseModel):
     def __str__(self):
         return self.model
 
-    def generate_response(self) -> Response:
+    def generate_response(self, stream=False) -> Response:
         if not self.client:
             self.client = OpenAI(api_key=self.api_key)
             
