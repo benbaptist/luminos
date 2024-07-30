@@ -35,8 +35,9 @@ class Config:
         }
     }
 
-    example = """global:
-  streaming: False # to use streaming or not
+    example = """
+global:
+  streaming: false # to use streaming or not. some providers may not work with streaming
         
 defaults:
   model: gpt-4

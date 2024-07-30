@@ -48,7 +48,7 @@ class Logic:
             if response.finish_reason == "tool_calls":
                 logger.debug("finish_reason == tool_calls")
                 
-                if response.content and not self.app.config["global"]["streaming"]:
+                if response.content and not stream:
                     print(f"<{self.model}> {response.content}")
                 
                 tool_calls = response.tool_calls

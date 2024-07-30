@@ -32,7 +32,7 @@ class BaseModel(ABC):
         self.system_prompt = ""
 
     def __str__(self):
-        return None
+        return self.model
 
     @abstractmethod
     def generate_response(self, stream=False):
